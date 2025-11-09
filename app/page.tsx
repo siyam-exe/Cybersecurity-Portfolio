@@ -8,9 +8,9 @@ import { CenteredIntro } from "@/components/centered-intro"
 const description = "Cybersecurity Student | CTF Enthusiast"
 
 const socialLinks = [
-  { icon: Github, href: "https://github.com/1tsD@M0nk3", label: "GitHub" },
-  { icon: Linkedin, href: "https://linkedin.com/in/alif-abedin-siyam", label: "LinkedIn" },
-  { icon: BookOpen, href: "https://medium.com/@siyam", label: "Medium" },
+  { icon: Github, href: "https://github.com/siyam-exe", label: "GitHub" },
+  { icon: Linkedin, href: "https://www.linkedin.com/in/alif-abedin-siyam-4a713b308/", label: "LinkedIn" },
+  { icon: BookOpen, href: "https://medium.com/@siyam.exe", label: "Medium" },
   { icon: Mail, href: "mailto:siyam.exe@gmail.com", label: "Email" },
 ]
 
