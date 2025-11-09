@@ -1,0 +1,387 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Updated to pure black hacker theme with neon colors */
+  --background: #0a0a0a;
+  --foreground: #e0e0e0;
+  --card: #121212;
+  --card-foreground: #e0e0e0;
+  --popover: #121212;
+  --popover-foreground: #e0e0e0;
+  --primary: #00dd88;
+  --primary-foreground: #0a0a0a;
+  --secondary: #009ec4;
+  --secondary-foreground: #0a0a0a;
+  --muted: #1a1a1a;
+  --muted-foreground: #888888;
+  --accent: #8844dd;
+  --accent-foreground: #e0e0e0;
+  --destructive: #ff4444;
+  --destructive-foreground: #e0e0e0;
+  --border: #00dd88;
+  --input: #1a1a1a;
+  --ring: #00dd88;
+  --chart-1: #00dd88;
+  --chart-2: #009ec4;
+  --chart-3: #8844dd;
+  --chart-4: #ff4444;
+  --chart-5: #ffd700;
+  --radius: 0.375rem;
+  --sidebar: #0a0a0a;
+  --sidebar-foreground: #e0e0e0;
+  --sidebar-primary: #00dd88;
+  --sidebar-primary-foreground: #0a0a0a;
+  --sidebar-accent: #1a1a1a;
+  --sidebar-accent-foreground: #e0e0e0;
+  --sidebar-border: #00dd88;
+  --sidebar-ring: #00dd88;
+
+  /* Added reduced glow variables for subtle neon effects */
+  --glow-color: #00dd88;
+  --glow-opacity: 0.15;
+  --glow-blur: 12px;
+}
+
+.dark {
+  /* Dark mode uses same colors as root for consistent hacker theme */
+  --background: #0a0a0a;
+  --foreground: #e0e0e0;
+  --card: #121212;
+  --card-foreground: #e0e0e0;
+  --popover: #121212;
+  --popover-foreground: #e0e0e0;
+  --primary: #00dd88;
+  --primary-foreground: #0a0a0a;
+  --secondary: #009ec4;
+  --secondary-foreground: #0a0a0a;
+  --muted: #1a1a1a;
+  --muted-foreground: #888888;
+  --accent: #8844dd;
+  --accent-foreground: #e0e0e0;
+  --destructive: #ff4444;
+  --destructive-foreground: #e0e0e0;
+  --border: #00dd88;
+  --input: #1a1a1a;
+  --ring: #00dd88;
+  --chart-1: #00dd88;
+  --chart-2: #009ec4;
+  --chart-3: #8844dd;
+  --chart-4: #ff4444;
+  --chart-5: #ffd700;
+  --radius: 0.375rem;
+  --sidebar: #0a0a0a;
+  --sidebar-foreground: #e0e0e0;
+  --sidebar-primary: #00dd88;
+  --sidebar-primary-foreground: #0a0a0a;
+  --sidebar-accent: #1a1a1a;
+  --sidebar-accent-foreground: #e0e0e0;
+  --sidebar-border: #00dd88;
+  --sidebar-ring: #00dd88;
+}
+
+@theme inline {
+  /* Added JetBrains Mono font variable */
+  --font-mono: var(--font-jetbrains-mono);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-secondary);
+}
+
+/* Enhanced neon glow effect with stronger shadows */
+.neon-glow {
+  text-shadow: 0 0 2px rgba(0, 221, 136, 0.8), 0 0 var(--glow-blur) rgba(0, 221, 136, var(--glow-opacity));
+}
+
+/* Enhanced neon border with stronger glow */
+.neon-border {
+  box-shadow: 0 6px var(--glow-blur) rgba(0, 221, 136, 0.06);
+}
+
+/* Added aqua glow variant */
+.aqua-glow {
+  text-shadow: 0 0 2px rgba(0, 180, 216, 0.8), 0 0 var(--glow-blur) rgba(0, 180, 216, var(--glow-opacity));
+}
+
+/* Scanline effect */
+.scanlines {
+  position: relative;
+  overflow: hidden;
+}
+
+.scanlines::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(0, 221, 136, 0.02) 50%);
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Updated terminal box with glassmorphic effect */
+.terminal-box {
+  background: rgba(18, 18, 18, 0.6);
+  border: 1px solid var(--color-primary);
+  backdrop-filter: blur(10px);
+  position: relative;
+  box-shadow: 0 0 10px rgba(0, 221, 136, 0.3), inset 0 0 20px rgba(0, 221, 136, 0.05);
+}
+
+.terminal-box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0, 221, 136, 0.1) 0%, transparent 50%, rgba(0, 180, 216, 0.1) 100%);
+  pointer-events: none;
+}
+
+/* Glitch effect */
+@keyframes glitch {
+  0%,
+  20%,
+  40%,
+  60%,
+  80%,
+  100% {
+    transform: translate(0);
+  }
+  25% {
+    transform: translate(-2px, 2px);
+  }
+  50% {
+    transform: translate(-2px, -2px);
+  }
+  75% {
+    transform: translate(2px, 2px);
+  }
+}
+
+.glitch {
+  animation: glitch 0.3s ease-in-out;
+}
+
+/* Added blinking cursor animation */
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.blink {
+  animation: blink 1s infinite;
+}
+
+/* Added floating animation */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Added button pulse and glow animations for neon hover effects */
+@keyframes neon-pulse {
+  0% {
+    box-shadow: 0 0 10px rgba(0, 221, 136, 0.4), inset 0 0 10px rgba(0, 221, 136, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 221, 136, 0.8), inset 0 0 15px rgba(0, 221, 136, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(0, 221, 136, 0.4), inset 0 0 10px rgba(0, 221, 136, 0.1);
+  }
+}
+
+@keyframes neon-pulse-secondary {
+  0% {
+    box-shadow: 0 0 10px rgba(0, 180, 216, 0.4), inset 0 0 10px rgba(0, 180, 216, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 180, 216, 0.8), inset 0 0 15px rgba(0, 180, 216, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(0, 180, 216, 0.4), inset 0 0 10px rgba(0, 180, 216, 0.1);
+  }
+}
+
+@keyframes neon-pulse-accent {
+  0% {
+    box-shadow: 0 0 10px rgba(154, 77, 255, 0.4), inset 0 0 10px rgba(154, 77, 255, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(154, 77, 255, 0.8), inset 0 0 15px rgba(154, 77, 255, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(154, 77, 255, 0.4), inset 0 0 10px rgba(154, 77, 255, 0.1);
+  }
+}
+
+.button-neon-primary {
+  animation: neon-pulse 1.5s ease-in-out infinite;
+}
+
+.button-neon-secondary {
+  animation: neon-pulse-secondary 1.5s ease-in-out infinite;
+}
+
+.button-neon-accent {
+  animation: neon-pulse-accent 1.5s ease-in-out infinite;
+}
+
+/* Added smooth button click animation */
+@keyframes button-click {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.button-click {
+  animation: button-click 0.2s ease-out;
+}
+
+/* Added CTF success pulse animation */
+@keyframes ctf-pulse {
+  0% {
+    background-color: rgba(0, 221, 136, 0);
+  }
+  50% {
+    background-color: rgba(0, 221, 136, 0.3);
+  }
+  100% {
+    background-color: rgba(0, 221, 136, 0);
+  }
+}
+
+.ctf-pulse {
+  animation: ctf-pulse 0.8s ease-in-out;
+}
+
+/* Respect prefers-reduced-motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .ctf-pulse {
+    animation: none;
+    background-color: rgba(0, 221, 136, 0.2);
+  }
+}
+
+/* Added pop-up scale animation for cards on hover */
+@keyframes card-popup {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.05);
+  }
+}
+
+.card-popup {
+  transition: transform 0.3s ease-out;
+}
+
+.card-popup:hover {
+  animation: card-popup 0.3s ease-out forwards;
+}
+
+/* Selection color */
+::selection {
+  background: var(--color-primary);
+  color: var(--color-background);
+}
+
+/* Smooth transitions */
+* {
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Remove transition from animations */
+[data-motion] * {
+  transition: none;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
