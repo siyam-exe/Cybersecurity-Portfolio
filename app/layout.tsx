@@ -22,18 +22,17 @@ export const metadata: Metadata = {
     type: "website",
   },
   icons: {
-    icon: "/images/monkey.png",
-    shortcut: "/images/monkey.png",
-    apple: "/images/monkey.png",
-  },
-  generator: 'v0.app'
-}
+    icon: "/monkey.png",
+    shortcut: "/monkey.png",
+    apple: "/monkey.png",
+  }
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
-}) {
+  children: React.ReactNode;
+}): React.ReactElement {
   return (
     <html lang="en" className={`${jetbrainsMono.variable} antialiased`}>
       <body className="bg-background text-foreground font-mono">
