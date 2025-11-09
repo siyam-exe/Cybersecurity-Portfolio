@@ -63,7 +63,7 @@ export default function HomePage() {
 
             {/* Download CV Button */}
             <motion.a
-              href="/cv.pdf"
+              href="/docs/Alif Abedin Siyam Resume.pdf"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="py-3 px-6 bg-primary text-black font-bold rounded hover:shadow-lg transition-shadow button-neon-primary"
