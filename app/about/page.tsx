@@ -110,7 +110,7 @@ export default function AboutPage() {
                 <span className="text-primary font-bold">BSc in Cyber Security</span>
               </p>
               <p className="text-muted-foreground">Asia Pacific University (APU)</p>
-              <p className="text-sm text-secondary">2022 - Present</p>
+              <p className="text-sm text-secondary">2024 - Present</p>
             </div>
           </TerminalBox>
         </motion.div>
