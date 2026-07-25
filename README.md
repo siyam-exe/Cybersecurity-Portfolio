@@ -67,7 +67,7 @@ No solution or flag is included in this README.
 - React Markdown and remark-gfm
 - Vercel Speed Insights
 - Playwright and axe-core
-- GitHub Actions, CodeQL, Gitleaks, and Dependabot
+- Optional GitHub Actions, CodeQL, and Gitleaks workflows plus Dependabot vulnerability alerts
 
 The repository uses pnpm only. Versions are pinned through `package.json` and `pnpm-lock.yaml`.
 
@@ -147,7 +147,8 @@ Review the resulting Markdown, metadata, image references, and Git diff before c
 - Security headers include CSP, HSTS, frame denial, content-type protection, a restrictive referrer policy, and a permissions policy.
 - CTF progress is HMAC-signed and tampered state is rejected.
 - CI runs dependency, type, lint, build, browser, and secret checks.
-- CodeQL, Gitleaks, and Dependabot are configured in `.github`.
+- CodeQL and Gitleaks workflows remain available in `.github`, but hosted workflows are manually disabled while the GitHub account is billing-locked.
+- Dependabot vulnerability alerts remain enabled; scheduled dependency-update pull requests are disabled to prevent unsolicited Vercel preview deployments.
 
 Report a security or privacy concern through the [portfolio contact page](https://alifabedinsiyam.vercel.app/contact). Do not include credentials, tokens, or sensitive personal data in a public GitHub issue.
 

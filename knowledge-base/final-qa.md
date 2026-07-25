@@ -33,7 +33,7 @@ PR #1 was merged into `master` as `bae257d9b10b7f89ecbaa5172319c0a491eaee4e`, an
 | HTTP hardening | **Passed in production** | CSP, HSTS, frame denial, referrer, permissions, and content-type protections present; framework signature header absent |
 | Crawl endpoints | **Passed in production** | `robots.txt` and the 36-URL sitemap respond correctly |
 
-The included CI workflow also repeats install, audit, type-check, lint, build, browser tests, and secret scanning. PR #1 and the merge commit triggered all workflows, but GitHub refused to start the CI, Gitleaks, and CodeQL jobs because the account is locked for billing. No hosted step executed, so these red checks are infrastructure failures rather than test failures. The matching local audit, type-check, lint, build, Playwright, and Gitleaks checks passed.
+The included CI workflow also repeats install, audit, type-check, lint, build, browser tests, and secret scanning. PR #1 and the merge commit triggered all workflows, but GitHub refused to start the CI, Gitleaks, and CodeQL jobs because the account is locked for billing. No hosted step executed, so those red checks were infrastructure failures rather than test failures. CI and CodeQL are now manually disabled to stop failure notifications. The matching local audit, type-check, lint, build, Playwright, and Gitleaks checks passed.
 
 ## Cleanup completed
 
@@ -76,7 +76,7 @@ The complete rebuild was reviewed through PR #1 and merged into `master` as `bae
 
 Keep the complete local QA and Gitleaks evidence while the GitHub billing lock prevents hosted CI and CodeQL. Retry those hosted workflows only if GitHub removes the account lock; paying for Actions is not required for the site to remain deployed.
 
-Dependabot vulnerability alerts and security updates are enabled. Before the merge, activation exposed 72 alerts on the obsolete default-branch lockfiles. After the rebuilt dependency tree reached `master`, GitHub recalculated the repository to **zero open Dependabot alerts**. The production tree also reports no known vulnerabilities through `pnpm audit`.
+Dependabot vulnerability alerts remain enabled. Before the merge, activation exposed 72 alerts on the obsolete default-branch lockfiles. After the rebuilt dependency tree reached `master`, GitHub recalculated the repository to **zero open Dependabot alerts**. Scheduled dependency-update pull requests were subsequently disabled because the generated branches caused unnecessary Vercel preview deployments and failure emails. The production tree also reports no known vulnerabilities through `pnpm audit`.
 
 ### P1 — Finish external production verification
 
@@ -101,9 +101,9 @@ Dependabot vulnerability alerts and security updates are enabled. Before the mer
 | CTF genuine expiry | **Pending** | Requires a real expired production session or controlled short-TTL staging test |
 | Vercel Speed Insights client | **Verified** | Production script and vitals endpoint respond |
 | Vercel Speed Insights dashboard ingestion | **Verified** | Enabled on Hobby and receiving production route/metric data |
-| GitHub hosted CI/Gitleaks/CodeQL | **Blocked externally** | PR jobs were created but GitHub did not start any steps because of an account billing lock |
+| GitHub hosted CI/Gitleaks/CodeQL | **Manually disabled** | GitHub would not start jobs because of an account billing lock; disabling CI and CodeQL stops repeated failure notifications |
 | Local Gitleaks | **Verified** | Full history scan passes after fingerprint-specific educational false-positive review |
-| Dependabot | **Verified** | Alerts and security updates are enabled; GitHub recalculated the merged `master` dependency tree to zero open alerts |
+| Dependabot | **Alerts enabled; scheduled PRs disabled** | GitHub recalculated the merged `master` tree to zero open alerts; scheduled update PRs are disabled to prevent automatic Vercel previews |
 | Google Search Console ownership | **Verified** | Production verification meta is live and ownership auto-verified |
 | Google sitemap processing | **Submitted; recheck required** | Google currently reports `Couldn't fetch`; independent HTTP/XML/URL validation passes |
 | Manual indexing requests | **Quota blocked** | Search Console daily quota prevented the homepage request; retry priority URLs after reset |

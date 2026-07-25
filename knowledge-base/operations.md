@@ -31,7 +31,7 @@ pnpm exec playwright install chromium
 pnpm test:e2e
 ```
 
-CI repeats the audit, type, lint, build, route, header, link, accessibility, terminal, CTF, and contact-endpoint checks. Dependabot monitors npm and GitHub Actions dependencies. CodeQL and Gitleaks provide code and secret scanning.
+The CI definition repeats the audit, type, lint, build, route, header, link, accessibility, terminal, CTF, and contact-endpoint checks. CI and CodeQL are manually disabled while GitHub refuses to start hosted jobs because of the account billing lock. Dependabot vulnerability alerts remain enabled, but scheduled dependency-update pull requests are disabled because their automatic branches created unsolicited Vercel preview deployments and failure emails. Local audit and Gitleaks checks remain the active verification path.
 
 ## Privacy and logging
 
@@ -50,7 +50,7 @@ EmailJS delivery, Turnstile rejection, the live Upstash-backed contact path, pro
 Current follow-ups:
 
 1. Replace or temporarily remove the current public résumé.
-2. Keep the successful local QA and Gitleaks evidence while GitHub's billing lock prevents hosted CI and CodeQL. Dependabot is enabled and reports zero open alerts on the merged default branch.
+2. Keep the successful local QA and Gitleaks evidence while GitHub's billing lock prevents hosted CI and CodeQL. Both hosted workflows are manually disabled. Dependabot vulnerability alerts report zero open alerts; scheduled update pull requests are disabled.
 3. Verify a genuinely expired production CTF session or use a controlled short-TTL staging test.
 4. Continue monitoring Vercel Speed Insights as the sample grows.
 5. Recheck Google Search Console's initial `Couldn't fetch` sitemap state and retry priority indexing after the daily quota resets.
