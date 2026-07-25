@@ -80,7 +80,7 @@ The complete rebuild is committed as `7d611cb` and pushed to `codex/final-portfo
 3. Keep the complete local QA and Gitleaks evidence while the GitHub billing lock prevents hosted CI and CodeQL.
 4. Retry hosted workflows only if GitHub removes the account lock.
 
-Dependabot vulnerability alerts and security updates are enabled. The scheduled npm and GitHub Actions update configuration becomes active after the PR reaches `master`.
+Dependabot vulnerability alerts and security updates are enabled. Activation exposed 72 alerts on the obsolete `master` dependency tree: each alert belongs to the old `package-lock.json` or old `pnpm-lock.yaml`, primarily Next.js, Lodash, PostCSS, and Sharp. The release branch removes the second lockfile, updates the affected stack, and reports no known vulnerabilities through `pnpm audit`. Recheck Dependabot after merge so GitHub recalculates the default branch. The scheduled npm and GitHub Actions update configuration also becomes active after the PR reaches `master`.
 
 ### P1 — Finish external production verification
 
@@ -107,7 +107,7 @@ Dependabot vulnerability alerts and security updates are enabled. The scheduled 
 | Vercel Speed Insights dashboard ingestion | **Verified** | Enabled on Hobby and receiving production route/metric data |
 | GitHub hosted CI/Gitleaks/CodeQL | **Blocked externally** | PR jobs were created but GitHub did not start any steps because of an account billing lock |
 | Local Gitleaks | **Verified** | Full history scan passes after fingerprint-specific educational false-positive review |
-| Dependabot | **Enabled** | Vulnerability alerts and security updates are active; scheduled version updates activate after merge |
+| Dependabot | **Enabled; default branch outdated** | 72 alerts belong to the old `master` lockfiles; the release branch audit is clean. Recheck after merge and scheduled updates activate then |
 | Google Search Console ownership | **Verified** | Production verification meta is live and ownership auto-verified |
 | Google sitemap processing | **Submitted; recheck required** | Google currently reports `Couldn't fetch`; independent HTTP/XML/URL validation passes |
 | Manual indexing requests | **Quota blocked** | Search Console daily quota prevented the homepage request; retry priority URLs after reset |
