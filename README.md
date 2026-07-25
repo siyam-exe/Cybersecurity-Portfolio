@@ -1,8 +1,6 @@
 # Alif Abedin Siyam — Cybersecurity Portfolio
 
 [![Live portfolio](https://img.shields.io/badge/live-alifabedinsiyam.vercel.app-00e69a?style=flat-square)](https://alifabedinsiyam.vercel.app)
-[![CI](https://github.com/siyam-exe/Cybersecurity-Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/siyam-exe/Cybersecurity-Portfolio/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/siyam-exe/Cybersecurity-Portfolio/actions/workflows/codeql.yml/badge.svg)](https://github.com/siyam-exe/Cybersecurity-Portfolio/actions/workflows/codeql.yml)
 
 Portfolio of **Alif Abedin Siyam**, a SOC Analyst, Security Researcher, and aspiring Penetration Tester. The site presents verified project work, categorized security writeups, credentials, capabilities, and a server-authoritative terminal CTF while preserving its original binary-rain and terminal-inspired identity.
 
@@ -179,7 +177,8 @@ Operational details and release evidence are maintained in [`knowledge-base/oper
 | Responsive and accessibility pass | Automated checks passing locally |
 | SEO and structured data | Implemented |
 | Contact production services | Configured and verified |
-| Google Search Console activation | Pending owner sign-in and verification |
+| Vercel Speed Insights | Enabled and receiving production data |
+| Google Search Console | Ownership verified; sitemap/index processing pending |
 | Public résumé replacement | Pending |
 
 ## License

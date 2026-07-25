@@ -50,10 +50,10 @@ EmailJS delivery, Turnstile rejection, the live Upstash-backed contact path, pro
 Before release:
 
 1. Replace or temporarily remove the current public résumé.
-2. Commit and push the reviewed working tree.
-3. Confirm hosted CI, Gitleaks, CodeQL, and Dependabot on that commit.
+2. Review and merge draft PR #1 so `master` matches the audited source.
+3. Keep the successful local QA and Gitleaks evidence while GitHub's billing lock prevents hosted CI and CodeQL. Dependabot vulnerability alerts and security updates are enabled.
 4. Verify a genuinely expired production CTF session or use a controlled short-TTL staging test.
-5. Confirm production traffic in the signed-in Vercel Speed Insights dashboard.
-6. Add the Google Search Console verification value, deploy it, submit the sitemap, and request priority indexing.
+5. Vercel Speed Insights is enabled and receiving production traffic; continue monitoring as the sample grows.
+6. Google Search Console ownership is verified and the sitemap is submitted. Recheck the initial `Couldn't fetch` processing state and retry priority indexing after the daily quota resets.
 
 See `final-qa.md` for the complete evidence and limitations.

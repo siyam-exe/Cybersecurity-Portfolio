@@ -9,7 +9,7 @@ The application code is locally release-ready: installation is reproducible, the
 The repository is **not yet fully release-approved** for two reasons:
 
 1. The currently public résumé conflicts with the approved privacy and credibility rules.
-2. The completed working tree has not been committed and pushed, so GitHub-hosted CI and security scans have not run against it.
+2. The rebuilt source is pushed in draft PR #1 but has not been merged to `master`. GitHub-hosted CI, Gitleaks, and CodeQL jobs are blocked before execution by an account-level billing lock.
 
 Production EmailJS, Turnstile, Upstash, security headers, and the CTF's normal and tamper-rejection paths have been verified. The production checks that remain unconfirmed are recorded below rather than treated as complete.
 
@@ -29,11 +29,12 @@ Production EmailJS, Turnstile, Upstash, security headers, and the CTF's normal a
 | Writeup integrity | **Passed** | 30 unique slugs, 286 image references, no missing references, no orphan writeup images |
 | Public assets | **Passed** | All tool logos are referenced; unused badges were removed |
 | Secret scan | **Passed** | No production credentials, private keys, or provider tokens found in tracked source |
+| Local Gitleaks 8.30.1 | **Passed** | Five educational JWT/CryptoHack false positives were reviewed and fingerprint-ignored; the full six-commit scan reports no leaks |
 | Public image metadata | **Passed** | 293 raster assets checked; no GPS/location, identity, email, local-path, or private-IP metadata found |
 | HTTP hardening | **Passed in production** | CSP, HSTS, frame denial, referrer, permissions, and content-type protections present; framework signature header absent |
 | Crawl endpoints | **Passed in production** | `robots.txt` and the 36-URL sitemap respond correctly |
 
-The included CI workflow also repeats install, audit, type-check, lint, build, browser tests, and secret scanning. It cannot provide hosted evidence until the current working tree is pushed.
+The included CI workflow also repeats install, audit, type-check, lint, build, browser tests, and secret scanning. Draft PR #1 triggered all workflows, but GitHub refused to start their jobs because the account is locked for billing. No hosted step executed, so these red checks are infrastructure failures rather than test failures.
 
 ## Cleanup completed
 
@@ -70,20 +71,22 @@ Do not publish the next release with that PDF linked. Choose one of these action
 
 The résumé was reviewed only for release risk; it was not edited.
 
-### P1 — Commit, push, and run hosted GitHub checks
+### P1 — Merge the reviewed pull request
 
-The complete rebuild and its workflows are still local and uncommitted. After owner approval:
+The complete rebuild is committed as `7d611cb` and pushed to `codex/final-portfolio-release` in draft PR #1. After owner approval:
 
-1. Review the final diff.
-2. Commit and push the intended files.
-3. Confirm GitHub Actions, Gitleaks, CodeQL, and Dependabot complete successfully.
-4. Deploy the exact reviewed commit so production and the audited source match.
+1. Review and merge PR #1 into `master`.
+2. Confirm the resulting Vercel production deployment.
+3. Keep the complete local QA and Gitleaks evidence while the GitHub billing lock prevents hosted CI and CodeQL.
+4. Retry hosted workflows only if GitHub removes the account lock.
+
+Dependabot vulnerability alerts and security updates are enabled. The scheduled npm and GitHub Actions update configuration becomes active after the PR reaches `master`.
 
 ### P1 — Finish external production verification
 
 - **CTF expiry:** the complete production solve and tampered-session rejection passed. Genuine two-hour expiry remains unproven because the local and production signing secrets differ; an old production token cannot distinguish expiry from a signature mismatch. Verify with a controlled short-TTL staging configuration or wait for a real production session to expire and resume it.
-- **Speed Insights:** the production script and project-specific vitals endpoint load successfully, and real page navigation was generated. Confirm that the event appears in the signed-in Vercel Speed Insights dashboard.
-- **Google Search Console:** the production Google verification meta value is absent. Add `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`, deploy, verify ownership, submit `/sitemap.xml`, and request indexing for the priority routes.
+- **Speed Insights:** enabled on the Vercel Hobby project and receiving production traffic. The dashboard reported 22 data points, a desktop Real Experience Score of 99, and route-level data during verification.
+- **Google Search Console:** ownership is verified through the deployed meta tag and `/sitemap.xml` was submitted. Google accepted the submission but its first processing result is `Couldn't fetch`, despite repeated public and Googlebot HTTP 200 responses, valid XML, and 36 well-formed HTTPS URLs. Recheck after Google processes the new property. Manual homepage indexing hit the daily quota before it could be queued; retry the homepage, About, Projects, and Writeups after the quota resets.
 
 ### P2 — Résumé and profile alignment
 
@@ -101,9 +104,13 @@ The complete rebuild and its workflows are still local and uncommitted. After ow
 | CTF tamper rejection | **Verified** | Modified session state was rejected with an unauthorized response |
 | CTF genuine expiry | **Pending** | Requires a real expired production session or controlled short-TTL staging test |
 | Vercel Speed Insights client | **Verified** | Production script and vitals endpoint respond |
-| Vercel Speed Insights dashboard ingestion | **Pending** | Requires confirmation in the signed-in project dashboard |
-| GitHub hosted CI/security scans | **Pending** | Current changes have not been pushed |
-| Google Search Console | **Pending** | Verification meta value is not present in production |
+| Vercel Speed Insights dashboard ingestion | **Verified** | Enabled on Hobby and receiving production route/metric data |
+| GitHub hosted CI/Gitleaks/CodeQL | **Blocked externally** | PR jobs were created but GitHub did not start any steps because of an account billing lock |
+| Local Gitleaks | **Verified** | Full history scan passes after fingerprint-specific educational false-positive review |
+| Dependabot | **Enabled** | Vulnerability alerts and security updates are active; scheduled version updates activate after merge |
+| Google Search Console ownership | **Verified** | Production verification meta is live and ownership auto-verified |
+| Google sitemap processing | **Submitted; recheck required** | Google currently reports `Couldn't fetch`; independent HTTP/XML/URL validation passes |
+| Manual indexing requests | **Quota blocked** | Search Console daily quota prevented the homepage request; retry priority URLs after reset |
 
 ## Residual, non-blocking notes
 

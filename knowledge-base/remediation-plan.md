@@ -69,18 +69,18 @@ The shared code category is complete. The work includes dependency and dead-code
 
 Verification passed: frozen install, audit with no known vulnerabilities, type-check, lint, production build, and production-mode browser tests. Exact details and deployment prerequisites are in `overall-status.md`.
 
-Still pending by design: résumé replacement, final owner approval, Search Console activation, hosted CI/security scans, genuine CTF-expiry verification, and Speed Insights dashboard confirmation. The repository README is rewritten and verified. Production EmailJS, Turnstile, Upstash, security headers, and the CTF normal/tamper paths are active and verified. The technical SEO implementation, dedicated terminal experience, and secret CTF redesign are complete and verified locally.
+Still pending by design: résumé replacement, final owner approval/PR merge, Google sitemap reprocessing and post-quota indexing requests, hosted CI/CodeQL availability, and genuine CTF-expiry verification. The repository README is rewritten; Search Console ownership is verified; the sitemap is submitted; local Gitleaks passes; Dependabot is enabled; and Speed Insights is receiving real production data. Production EmailJS, Turnstile, Upstash, security headers, and the CTF normal/tamper paths are active and verified.
 
 | Stage | Status | Notes |
 |---|---|---|
 | 0. Baseline | Verified | Fresh clone and shared foundation checks pass |
 | 1. P0 blockers | Verified | Shared dependency, contact, route, and configuration blockers pass locally |
 | 2. Credible content | In progress | Verified homelab, writeup library, About profile, evidence-linked Home page, and recruiter-focused Contact page added; completed pages await final owner approval |
-| 3. SEO | Verified locally | Complete metadata, self-canonicals, social preview, 36-URL sitemap, robots, manifest, route schemas, proper 404s, internal discovery, and automated assertions; Search Console activation remains after deployment |
+| 3. SEO | In progress | Technical implementation and Search Console ownership verified; sitemap submitted but first Google processing reports `Couldn't fetch`; indexing requests are daily-quota blocked |
 | 4. UX/accessibility | In progress | Shared contracts verified; page-specific content/layout passes remain |
 | 5. Performance | Verified | Shared effects, images, hydration, and monitoring implementation complete |
 | 6. Hardening/privacy | In progress | Code and production services verified; the current public résumé violates the approved privacy/content rules and must be replaced or temporarily removed |
-| 7. Architecture/tests | Verified | Shared architecture, CI, browser, accessibility, link, and security checks added |
+| 7. Architecture/tests | Verified locally | Shared architecture, browser, accessibility, link, audit, build, and local Gitleaks checks pass; GitHub-hosted jobs are account-billing blocked before execution |
 | 8. README/résumé | In progress | README verified; résumé replacement requires an owner-approved revised document |
 
 ## Current page-by-page queue — 2026-07-22
