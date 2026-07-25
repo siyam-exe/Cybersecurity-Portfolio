@@ -66,8 +66,7 @@ No solution or flag is included in this README.
 - Tailwind CSS 4
 - React Markdown and remark-gfm
 - Vercel Speed Insights
-- Playwright and axe-core
-- Optional GitHub Actions, CodeQL, and Gitleaks workflows plus Dependabot vulnerability alerts
+- Playwright, axe-core, CodeQL, and Gitleaks
 
 The repository uses pnpm only. Versions are pinned through `package.json` and `pnpm-lock.yaml`.
 
@@ -115,7 +114,7 @@ Production contact requests fail closed when Turnstile, durable rate limiting, o
 
 ## Verification
 
-Run the same checks used by CI:
+Run the project checks:
 
 ```bash
 pnpm install --frozen-lockfile
@@ -146,41 +145,13 @@ Review the resulting Markdown, metadata, image references, and Git diff before c
 - Rate-limit identifiers are salted hashes rather than raw client addresses.
 - Security headers include CSP, HSTS, frame denial, content-type protection, a restrictive referrer policy, and a permissions policy.
 - CTF progress is HMAC-signed and tampered state is rejected.
-- CI runs dependency, type, lint, build, browser, and secret checks.
-- CodeQL and Gitleaks workflows remain available in `.github`, but hosted workflows are manually disabled while the GitHub account is billing-locked.
-- Dependabot vulnerability alerts remain enabled; scheduled dependency-update pull requests are disabled to prevent unsolicited Vercel preview deployments.
+- The verification suite covers dependency, type, lint, build, browser, accessibility, and secret checks.
 
 Report a security or privacy concern through the [portfolio contact page](https://alifabedinsiyam.vercel.app/contact). Do not include credentials, tokens, or sensitive personal data in a public GitHub issue.
 
 ## Deployment
 
-The production site is hosted on Vercel and connected to the repository’s `master` branch. A push to `master` starts the configured GitHub checks and a Vercel deployment.
-
-Before treating a deployment as complete:
-
-1. Confirm GitHub Actions and CodeQL pass for the deployed commit.
-2. Confirm the Vercel deployment reports `Ready`.
-3. Submit a real contact message and confirm delivery.
-4. Confirm Turnstile and Upstash rejection/rate-limit behavior.
-5. Confirm Speed Insights receives production traffic.
-6. Verify the property in Google Search Console and submit `/sitemap.xml`.
-
-Operational details and release evidence are maintained in [`knowledge-base/operations.md`](knowledge-base/operations.md) and [`knowledge-base/final-qa.md`](knowledge-base/final-qa.md).
-
-## Repository status
-
-| Area | Status |
-|---|---|
-| Home, About, Projects, Writeups, Contact | Implemented |
-| Cybersecurity Homelab report | Implemented |
-| Thirty categorized writeups | Implemented |
-| Terminal and five-chapter CTF | Implemented |
-| Responsive and accessibility pass | Automated checks passing locally |
-| SEO and structured data | Implemented |
-| Contact production services | Configured and verified |
-| Vercel Speed Insights | Enabled and receiving production data |
-| Google Search Console | Ownership verified; sitemap/index processing pending |
-| Public résumé replacement | Pending |
+The production site is hosted on Vercel and connected to the repository’s `master` branch. Updates to `master` are deployed automatically.
 
 ## License
 
