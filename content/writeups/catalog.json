@@ -1,0 +1,272 @@
+[
+  {
+    "sourceFile": "day-01-introduction-to-cryptohack-writeup.md",
+    "slug": "introduction-to-cryptohack",
+    "title": "Introduction to CryptoHack",
+    "platform": "CryptoHack",
+    "category": "Cryptography",
+    "summary": "A practical introduction to encodings, XOR, byte operations, and the foundational techniques used throughout CryptoHack.",
+    "tags": ["Encoding", "XOR", "Python", "CyberChef"]
+  },
+  {
+    "sourceFile": "day-02-picoctf-2019-easy1-writeup.md",
+    "slug": "picoctf-easy1",
+    "title": "Easy1",
+    "platform": "picoCTF",
+    "category": "Cryptography",
+    "summary": "Solving a Vigenère cipher challenge by identifying the cipher structure and applying the supplied key correctly.",
+    "tags": ["Vigenère", "Classical Cryptography", "CyberChef"]
+  },
+  {
+    "sourceFile": "day-03-ecb-oracle-writeup.md",
+    "slug": "ecb-oracle",
+    "title": "ECB Oracle",
+    "platform": "CryptoHack",
+    "category": "Cryptography",
+    "summary": "A byte-at-a-time ECB oracle attack demonstrating how deterministic block encryption can disclose an appended secret.",
+    "tags": ["AES", "ECB", "Oracle Attack", "Python"]
+  },
+  {
+    "sourceFile": "day-04-lazy-cbc-writeup.md",
+    "slug": "lazy-cbc",
+    "title": "Lazy CBC",
+    "platform": "CryptoHack",
+    "category": "Cryptography",
+    "summary": "Recovering an AES key by exploiting CBC key-and-IV reuse together with plaintext disclosed through an error response.",
+    "tags": ["AES", "CBC", "XOR", "Python"]
+  },
+  {
+    "sourceFile": "day-05-alexctf-cr2-many-time-secrets-writeup.md",
+    "slug": "many-time-secrets",
+    "title": "Many Time Secrets",
+    "platform": "ALEXCTF",
+    "category": "Cryptography",
+    "summary": "Investigating reused one-time-pad keystreams with XOR relationships, crib dragging, and partial plaintext recovery.",
+    "tags": ["One-Time Pad", "Keystream Reuse", "Crib Dragging", "XOR"]
+  },
+  {
+    "sourceFile": "day-06-mind-your-ps-and-qs-writeup.md",
+    "slug": "mind-your-ps-and-qs",
+    "title": "Mind Your Ps and Qs",
+    "platform": "picoCTF",
+    "category": "Cryptography",
+    "summary": "Breaking weak RSA by factoring the public modulus, rebuilding the private key, and decrypting the supplied ciphertext.",
+    "tags": ["RSA", "Factorization", "Modular Arithmetic", "Python"]
+  },
+  {
+    "sourceFile": "day-07-dancing-queen-ctf-writeup.md",
+    "slug": "dancing-queen",
+    "title": "Dancing Queen",
+    "platform": "CryptoHack",
+    "category": "Cryptography",
+    "summary": "Tracing stream-cipher behavior and byte-level transformations to recover the challenge secret with a reproducible script.",
+    "tags": ["Stream Cipher", "ChaCha20", "Python", "Byte Operations"]
+  },
+  {
+    "sourceFile": "day-08-sakura-tryhackme-osint-writeup.md",
+    "slug": "sakura",
+    "title": "Sakura",
+    "platform": "TryHackMe",
+    "category": "OSINT",
+    "summary": "Following a multi-stage public-information trail through usernames, GitHub, PGP data, cryptocurrency activity, Wi-Fi clues, and travel evidence.",
+    "tags": ["Username Investigation", "PGP", "Geolocation", "Blockchain"]
+  },
+  {
+    "sourceFile": "day-09-kaffeesec-someint-tryhackme-osint-writeup.md",
+    "slug": "kaffeesec-someint",
+    "title": "KaffeeSec SomeINT",
+    "platform": "TryHackMe",
+    "category": "OSINT",
+    "summary": "Correlating public profiles and platform clues while documenting how automated reconnaissance supports manual verification.",
+    "tags": ["Profile Correlation", "Reddit", "Reconnaissance", "Verification"]
+  },
+  {
+    "sourceFile": "day-10-cache-me-outside-tryhackme-osint-writeup.md",
+    "slug": "cache-me-outside",
+    "title": "Cache Me Outside",
+    "platform": "TryHackMe",
+    "category": "OSINT",
+    "summary": "An OSINT investigation built around cached public activity, identity clues, and evidence gathered across multiple platforms.",
+    "tags": ["Public Records", "Cached Data", "Identity Correlation", "Investigation"]
+  },
+  {
+    "sourceFile": "day-11-matryoshka-dolls-picoctf-forensics-writeup.md",
+    "slug": "matryoshka-dolls",
+    "title": "Matryoshka Dolls",
+    "platform": "picoCTF",
+    "category": "Forensics",
+    "summary": "Extracting recursively embedded files from an image and validating each layer until the hidden evidence is recovered.",
+    "tags": ["File Carving", "binwalk", "Embedded Files", "Linux"]
+  },
+  {
+    "sourceFile": "day-12-tunn3l-v1s10n-picoctf-forensics-writeup.md",
+    "slug": "tunn3l-v1s10n",
+    "title": "tunn3l v1s10n",
+    "platform": "picoCTF",
+    "category": "Forensics",
+    "summary": "Repairing a malformed BMP header byte by byte, calculating the correct dimensions, and revealing concealed image data.",
+    "tags": ["File Headers", "BMP", "Hex Analysis", "Metadata Repair"]
+  },
+  {
+    "sourceFile": "day-13-carnage-tryhackme-network-forensics-writeup.md",
+    "slug": "carnage",
+    "title": "Carnage",
+    "platform": "TryHackMe",
+    "category": "Forensics",
+    "summary": "Investigating a packet capture with Wireshark to reconstruct suspicious traffic, extract indicators, and follow the compromise timeline.",
+    "tags": ["Wireshark", "PCAP", "Network Forensics", "Indicators"]
+  },
+  {
+    "sourceFile": "day-14-sleuthkit-apprentice-picoctf-forensics-writeup.md",
+    "slug": "sleuthkit-apprentice",
+    "title": "Sleuthkit Apprentice",
+    "platform": "picoCTF",
+    "category": "Forensics",
+    "summary": "Examining a disk image with Sleuth Kit utilities to locate partitions, enumerate files, and recover the target artifact.",
+    "tags": ["Sleuth Kit", "Disk Image", "File Recovery", "Linux"]
+  },
+  {
+    "sourceFile": "day-15-permissions-picoctf-writeup.md",
+    "slug": "permissions",
+    "title": "Permissions",
+    "platform": "picoCTF",
+    "category": "Privilege Escalation",
+    "summary": "Enumerating a Linux host and abusing an overly permissive sudo rule to reach protected data through an authorized binary.",
+    "tags": ["Linux", "sudo", "Permissions", "Enumeration"]
+  },
+  {
+    "sourceFile": "day-16-tryhackme-linux-privilege-escalation-writeup.md",
+    "slug": "linux-privilege-escalation",
+    "title": "Linux Privilege Escalation",
+    "platform": "TryHackMe",
+    "category": "Privilege Escalation",
+    "summary": "A broad Linux privilege-escalation lab covering enumeration, weak permissions, scheduled tasks, capabilities, NFS, and multiple paths to root.",
+    "tags": ["Linux", "Enumeration", "SUID", "Capabilities"]
+  },
+  {
+    "sourceFile": "day-18-rootme-tryhackme-writeup.md",
+    "slug": "rootme",
+    "title": "RootMe",
+    "platform": "TryHackMe",
+    "category": "Privilege Escalation",
+    "summary": "A complete web-to-root path using service enumeration, directory discovery, upload-filter bypass, shell access, and Linux privilege escalation.",
+    "tags": ["Nmap", "Gobuster", "File Upload", "SUID"]
+  },
+  {
+    "sourceFile": "day-20-power-cookie-picoctf-web-exploitation-writeup.md",
+    "slug": "power-cookie",
+    "title": "Power Cookie",
+    "platform": "picoCTF",
+    "category": "Web Exploitation",
+    "summary": "Inspecting and modifying client-side cookie state to demonstrate why authorization decisions cannot be trusted to the browser.",
+    "tags": ["Cookies", "Authorization", "Browser DevTools", "Tampering"]
+  },
+  {
+    "sourceFile": "day-21-sqlilite-picoctf-web-exploitation-writeup.md",
+    "slug": "sqlilite",
+    "title": "SQLiLite",
+    "platform": "picoCTF",
+    "category": "Web Exploitation",
+    "summary": "Tracing a vulnerable authentication query and constructing a controlled SQL injection to bypass the login check.",
+    "tags": ["SQL Injection", "Authentication Bypass", "SQLite", "Web"]
+  },
+  {
+    "sourceFile": "day-22-n0s4n1ty-1-picoctf-web-exploitation-writeup.md",
+    "slug": "n0s4n1ty-1",
+    "title": "n0s4n1ty 1",
+    "platform": "picoCTF",
+    "category": "Web Exploitation",
+    "summary": "Turning weak profile-image upload validation into server-side code execution and controlled file access.",
+    "tags": ["File Upload", "PHP", "Command Execution", "Validation Bypass"]
+  },
+  {
+    "sourceFile": "day-23-noted-picoctf-web-exploitation-writeup.md",
+    "slug": "noted",
+    "title": "Noted",
+    "platform": "picoCTF",
+    "category": "Web Exploitation",
+    "summary": "Analyzing stored XSS, browser state, and a report workflow to understand how attacker-controlled content reaches a privileged session.",
+    "tags": ["Stored XSS", "Browser State", "Report Flow", "JavaScript"]
+  },
+  {
+    "sourceFile": "day-24-jawt-scratchpad-picoctf-web-exploitation-writeup.md",
+    "slug": "jawt-scratchpad",
+    "title": "JaWT Scratchpad",
+    "platform": "picoCTF",
+    "category": "Web Exploitation",
+    "summary": "Recovering a weak JWT signing secret and forging an authorized token to access protected application functionality.",
+    "tags": ["JWT", "Weak Secret", "Token Forgery", "John the Ripper"]
+  },
+  {
+    "sourceFile": "day-25-buffer-overflow-0-picoctf-binary-exploitation-writeup.md",
+    "slug": "buffer-overflow-0",
+    "title": "buffer overflow 0",
+    "platform": "picoCTF",
+    "category": "Binary Exploitation",
+    "summary": "A first stack-overflow exercise showing how oversized input reaches a crash handler and triggers the challenge win condition.",
+    "tags": ["Buffer Overflow", "Stack", "C", "GDB"]
+  },
+  {
+    "sourceFile": "day-26-picoctf-buffer-overflow-1-writeup.md",
+    "slug": "buffer-overflow-1",
+    "title": "Buffer Overflow 1",
+    "platform": "picoCTF",
+    "category": "Binary Exploitation",
+    "summary": "Calculating a stack offset, controlling EIP, and redirecting execution to an existing win function in a vulnerable binary.",
+    "tags": ["Buffer Overflow", "EIP Control", "pwntools", "GDB"]
+  },
+  {
+    "sourceFile": "day-27-pie-time-picoctf-binary-exploitation-writeup.md",
+    "slug": "pie-time",
+    "title": "PIE TIME",
+    "platform": "picoCTF",
+    "category": "Binary Exploitation",
+    "summary": "Using a leaked runtime address and symbol offsets to calculate the randomized location of a target function in a PIE binary.",
+    "tags": ["PIE", "Address Leak", "Offsets", "pwntools"]
+  },
+  {
+    "sourceFile": "day-28-rop-emporium-ret2win-x86-64-writeup.md",
+    "slug": "ret2win-x86-64",
+    "title": "ret2win x86_64",
+    "platform": "ROP Emporium",
+    "category": "Binary Exploitation",
+    "summary": "Finding the exact overflow offset and building a minimal ROP chain that redirects execution to the supplied win function.",
+    "tags": ["ROP", "ret2win", "x86-64", "pwntools"]
+  },
+  {
+    "sourceFile": "day-29-rop-emporium-split-x86-64-writeup.md",
+    "slug": "split-x86-64",
+    "title": "split x86_64",
+    "platform": "ROP Emporium",
+    "category": "Binary Exploitation",
+    "summary": "Building a ROP chain from existing gadgets, a useful command string, and a PLT function to read the challenge flag.",
+    "tags": ["ROP", "Gadgets", "x86-64", "pwntools"]
+  },
+  {
+    "sourceFile": "day-30-gdb-test-drive-picoctf-reverse-engineering-writeup.md",
+    "slug": "gdb-test-drive",
+    "title": "GDB Test Drive",
+    "platform": "picoCTF",
+    "category": "Reverse Engineering",
+    "summary": "Using GDB to inspect program behavior, bypass an unnecessary delay, and reveal the flag-producing execution path.",
+    "tags": ["GDB", "Debugging", "Breakpoints", "Runtime Analysis"]
+  },
+  {
+    "sourceFile": "day-31-packer-picoctf-reverse-engineering-writeup.md",
+    "slug": "packer",
+    "title": "Packer",
+    "platform": "picoCTF",
+    "category": "Reverse Engineering",
+    "summary": "Identifying a UPX-packed binary, unpacking it, and examining the recovered program to locate the embedded secret.",
+    "tags": ["UPX", "Packing", "Static Analysis", "Linux"]
+  },
+  {
+    "sourceFile": "day-32-factcheck-picoctf-reverse-engineering-writeup.md",
+    "slug": "factcheck",
+    "title": "FactCheck",
+    "platform": "picoCTF",
+    "category": "Reverse Engineering",
+    "summary": "Combining Ghidra and GDB to trace a quiet binary as it reconstructs its flag through runtime string operations.",
+    "tags": ["Ghidra", "GDB", "C++", "Dynamic Analysis"]
+  }
+]
