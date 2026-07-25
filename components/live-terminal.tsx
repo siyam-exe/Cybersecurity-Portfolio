@@ -1,382 +1,514 @@
 "use client"
 
 import type React from "react"
-
-import { useState, useEffect, useRef } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import { X } from "lucide-react"
+import {
+  BookOpenText,
+  CircleHelp,
+  FolderGit2,
+  Github,
+  Home,
+  Linkedin,
+  Mail,
+  Radar,
+  ShieldCheck,
+  TerminalSquare,
+  UserRound,
+  X,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Confetti } from "./confetti"
+import { AsciiTorus } from "@/components/ascii-torus"
+import { ctfStorageKey, type CtfResponse, type CtfStage } from "@/lib/ctf"
+import { siteLinks } from "@/lib/site"
+
+declare global {
+  interface Window {
+    startCTF?: () => void
+  }
+}
+
+type LineType = "input" | "output" | "muted" | "error" | "success" | "system"
 
 interface TerminalLine {
-  type: "input" | "output" | "error" | "success"
+  id: number
+  type: LineType
   content: string
 }
 
-const commands = {
-  help: `Available commands:
-  help          - Show this help message
-  about         - Navigate to About page
-  projects      - Navigate to Projects page
-  writeups      - Navigate to Writeups page
-  contact       - Navigate to Contact page
-  email         - Copy contact email
-  echo <text>   - Echo text back
-  startctf      - Begin the CTF challenge
-  decode <text> - Decode a base64 string
-  flag <code>   - Submit CTF flag
-  clear         - Clear terminal
-  whoami        - Display user info
-  exit          - Close terminal`,
-  whoami: `User: Alif Abedin Siyam
-Handle: 1tsD@M0nk3
-Role: Cybersecurity Student & CTF Enthusiast
-Location: Asia Pacific University (APU)
-Email: siyam.exe@gmail.com`,
-}
+const helpText = `COMMAND INDEX
+
+EXPLORE
+  home · about · projects · writeups · contact
+
+PROFILE
+  whoami · status · github · linkedin · medium · email
+
+UTILITIES
+  ls · pwd · date · echo <text> · clear · exit
+
+DAMONKE CTF
+  ctf start · ctf look note · ctf status · ctf resume · ctf reset
+  ctf accuse <name> · ctf submit DAMONKE{...}
+  ask wizard  (Thistle answers)
+
+The terminal drives the journey. Evidence lives in a real writeup, the
+homelab project report, and the path polite crawlers avoid.`
+
+const initialLines: Omit<TerminalLine, "id">[] = [
+  { type: "system", content: "1tsD@M0nk3 CONTROL NODE // secure session established" },
+  { type: "output", content: "Welcome. Explore the portfolio through commands or use the command menu." },
+  { type: "success", content: "[CTF] The Elderbanana Tree has stopped growing. Three Peelrune fragments are somewhere beyond Sunroot Grove." },
+  { type: "muted", content: 'Type "help" for the command index or "ctf" for the case briefing.' },
+]
+
+const shortcuts = [
+  { command: "home", label: "Home", icon: Home },
+  { command: "about", label: "About", icon: UserRound },
+  { command: "projects", label: "Projects", icon: FolderGit2 },
+  { command: "writeups", label: "Writeups", icon: BookOpenText },
+]
 
 export function LiveTerminal() {
   const [isOpen, setIsOpen] = useState(false)
-  const [lines, setLines] = useState<TerminalLine[]>([
-    { type: "output", content: "Welcome to 1tsD@M0nk3 Terminal v1.0" },
-    { type: "output", content: "[!] I heard there's an interesting writeup about web security..." },
-    { type: "output", content: "[!] Maybe you should check the page source when you get there." },
-    { type: "output", content: 'Type "help" for available commands' },
-  ])
+  const [lines, setLines] = useState<TerminalLine[]>(() => initialLines.map((line, index) => ({ ...line, id: index })))
   const [input, setInput] = useState("")
   const [history, setHistory] = useState<string[]>([])
   const [historyIndex, setHistoryIndex] = useState(-1)
-  const [showConfetti, setShowConfetti] = useState(false)
-  const [ctfPulsing, setCtfPulsing] = useState(false)
+  const [isBusy, setIsBusy] = useState(false)
+  const [ctfSession, setCtfSession] = useState("")
+  const [ctfStage, setCtfStage] = useState<CtfStage>(0)
+  const dialogRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const outputRef = useRef<HTMLDivElement>(null)
+  const lastFocusedElementRef = useRef<HTMLElement | null>(null)
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([])
+  const lineIdRef = useRef(initialLines.length)
   const router = useRouter()
 
+  const addLine = useCallback((type: LineType, content: string) => {
+    const id = lineIdRef.current++
+    setLines((previous) => [...previous, { id, type, content }].slice(-200))
+  }, [])
+
+  const schedule = useCallback((callback: () => void, delay: number) => {
+    const timer = setTimeout(callback, delay)
+    timersRef.current.push(timer)
+  }, [])
+
+  const closeTerminal = useCallback(() => setIsOpen(false), [])
+
   useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.key === "~") {
-        e.preventDefault()
-        setIsOpen((prev) => !prev)
-      } else if (e.key === "Escape" && isOpen) {
-        setIsOpen(false)
+    try {
+      const stored = sessionStorage.getItem(ctfStorageKey)
+      if (!stored) return
+      const value = JSON.parse(stored) as { session?: string; stage?: CtfStage }
+      if (value.session && typeof value.stage === "number") {
+        setCtfSession(value.session)
+        setCtfStage(value.stage)
       }
+    } catch {
+      sessionStorage.removeItem(ctfStorageKey)
+    }
+  }, [])
+
+  useEffect(() => {
+    const syncCtfState = (event: Event) => {
+      const { session, stage } = (event as CustomEvent<{ session: string; stage: CtfStage }>).detail
+      setCtfSession(session)
+      setCtfStage(stage)
+    }
+
+    window.addEventListener("portfolio:ctf-state", syncCtfState)
+    return () => window.removeEventListener("portfolio:ctf-state", syncCtfState)
+  }, [])
+
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      const target = event.target
+      const isEditing = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLElement && target.isContentEditable
+      if (event.key === "~" && !isEditing) {
+        event.preventDefault()
+        setIsOpen((open) => {
+          if (!open) lastFocusedElementRef.current = document.activeElement as HTMLElement
+          return !open
+        })
+      } else if (event.key === "Escape" && isOpen) {
+        closeTerminal()
+      }
+    }
+
+    const openTerminal = () => {
+      lastFocusedElementRef.current = document.activeElement as HTMLElement
+      setIsOpen(true)
     }
 
     window.addEventListener("keydown", handleKeyPress)
-    return () => window.removeEventListener("keydown", handleKeyPress)
-  }, [isOpen])
+    window.addEventListener("portfolio:open-terminal", openTerminal)
+    window.startCTF = () => {
+      openTerminal()
+      addLine("success", "[CTF] Sunroot Grove route ready. Run ctf start when you are ready.")
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress)
+      window.removeEventListener("portfolio:open-terminal", openTerminal)
+      delete window.startCTF
+    }
+  }, [addLine, closeTerminal, isOpen])
 
   useEffect(() => {
-    if (isOpen && inputRef.current) {
-      inputRef.current.focus()
+    if (!isOpen) return
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    inputRef.current?.focus()
+    return () => {
+      document.body.style.overflow = previousOverflow
+      lastFocusedElementRef.current?.focus()
     }
   }, [isOpen])
 
-  // Auto-scroll to bottom
   useEffect(() => {
-    if (outputRef.current) {
-      outputRef.current.scrollTop = outputRef.current.scrollHeight
-    }
+    if (outputRef.current) outputRef.current.scrollTop = outputRef.current.scrollHeight
   }, [lines])
 
   useEffect(() => {
-    const handleCTFSuccess = (event: Event) => {
-      const customEvent = event as CustomEvent
-      const message = customEvent.detail?.message || "[+] Challenge completed successfully!"
-
-      addLine("success", message)
-      setShowConfetti(true)
-      setCtfPulsing(true)
-
-      const announcement = document.getElementById("ctf-announcement")
-      if (announcement) {
-        announcement.textContent = "CTF challenge completed. Access granted."
-      }
-
-      setTimeout(() => setCtfPulsing(false), 1600)
-      setTimeout(() => setShowConfetti(false), 5000)
-    }
-
-    window.addEventListener("ctf-success", handleCTFSuccess)
-    return () => window.removeEventListener("ctf-success", handleCTFSuccess)
+    const timers = timersRef.current
+    return () => timers.forEach(clearTimeout)
   }, [])
 
-  const addLine = (type: TerminalLine["type"], content: string) => {
-    setLines((prev) => [...prev, { type, content }])
+  const saveCtfState = (session: string, stage: CtfStage) => {
+    setCtfSession(session)
+    setCtfStage(stage)
+    sessionStorage.setItem(ctfStorageKey, JSON.stringify({ session, stage }))
+  }
+
+  const resetCtf = async () => {
+    await postCtf("reset")
+    setCtfSession("")
+    setCtfStage(0)
+    sessionStorage.removeItem(ctfStorageKey)
+    addLine("system", "[CTF] Journey cleared. Run ctf start for a new session.")
+  }
+
+  const showCtfResponse = (body: CtfResponse) => {
+    addLine(body.ok ? "success" : "error", `${body.ok ? "[+]" : "[-]"} ${body.message}`)
+    body.evidence?.forEach((item) => addLine("output", `    ${item}`))
+    if (body.hint) addLine("output", `    "${body.hint}"`)
+    if (body.session && typeof body.stage === "number") saveCtfState(body.session, body.stage)
+    if (body.ok && body.stage === 7) {
+      addLine("success", "      __\n  ___/o \\_     PEELRUNE RESTORED\n /  _     \\    GROVE STATUS: GROWING\n \\_/ \\____/")
+    }
+  }
+
+  const postCtf = async (action: string, answer = "") => {
+    setIsBusy(true)
+    try {
+      const result = await fetch("/api/ctf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action, answer, session: ctfSession }),
+        signal: AbortSignal.timeout(10_000),
+      })
+      const body = await result.json() as CtfResponse
+      showCtfResponse(body)
+      return body
+    } catch {
+      addLine("error", "[-] Challenge service did not respond. Try again in a moment.")
+      return null
+    } finally {
+      setIsBusy(false)
+    }
+  }
+
+  const getCtf = async (resource: string) => {
+    setIsBusy(true)
+    try {
+      const result = await fetch(`/api/ctf?resource=${resource}`, { headers: { "X-CTF-Session": ctfSession }, signal: AbortSignal.timeout(10_000) })
+      const body = await result.json() as CtfResponse
+      showCtfResponse(body)
+      if (resource === "note" && result.ok) {
+        const trail = result.headers.get("x-thistle-route")
+        if (trail) addLine("output", `    X-Thistle-Route: ${trail}`)
+      }
+      return body
+    } catch {
+      addLine("error", "[-] Evidence service did not respond.")
+      return null
+    } finally {
+      setIsBusy(false)
+    }
+  }
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(siteLinks.emailAddress)
+      addLine("success", `[+] Email copied: ${siteLinks.emailAddress}`)
+    } catch {
+      addLine("error", `[-] Clipboard unavailable. Email: ${siteLinks.emailAddress}`)
+    }
+  }
+
+  const navigate = (path: string, label: string) => {
+    addLine("muted", `[>] Opening ${label}...`)
+    schedule(() => {
+      router.push(path)
+      closeTerminal()
+    }, 260)
+  }
+
+  const openExternal = (url: string, label: string) => {
+    addLine("muted", `[>] Opening ${label} in a new tab...`)
+    window.open(url, "_blank", "noopener,noreferrer")
   }
 
   const shakeTerminal = () => {
-    const element = outputRef.current?.closest(".terminal-container")
-    if (element instanceof HTMLElement) {
-      element.style.animation = "shake 0.5s"
-      setTimeout(() => {
-        element.style.animation = ""
-      }, 500)
-    }
+    dialogRef.current?.classList.remove("terminal-shake")
+    requestAnimationFrame(() => dialogRef.current?.classList.add("terminal-shake"))
+    schedule(() => dialogRef.current?.classList.remove("terminal-shake"), 450)
   }
 
-  const handleCommand = (cmd: string) => {
-    const trimmedCmd = cmd.trim()
-    const lowerCmd = trimmedCmd.toLowerCase()
-    const [command, ...args] = lowerCmd.split(" ")
+  const showCtfBriefing = () => {
+    const progress = ctfStage === 7 ? "COMPLETE" : `${Math.max(0, Math.min(5, ctfStage - 1))}/5`
+    addLine("system", "THE LAST PEEL OF SUNROOT GROVE // site-wide quest")
+    addLine("output", `Progress: ${progress}`)
+    addLine("output", "The Elderbanana Tree's growth spell has frayed into three Peelrune fragments. Grum, Cindermaw, and Hazel each hold one.")
+    const next = ctfStage === 1
+      ? "ctf look note"
+      : ctfStage === 2
+        ? "ctf resume → recover Grum's proof, then ctf submit <word>"
+        : ctfStage === 3
+          ? "ctf resume → order Cindermaw's build record, then ctf submit <sequence>"
+          : ctfStage === 4
+            ? "ctf resume → find Hazel, decrypt her fragment, then ctf submit <fragment>"
+            : ctfStage === 5
+              ? "ctf resume → verify the smoke-darkened project mark"
+              : ctfStage === 6
+                ? "ctf submit DAMONKE{grum_cindermaw_hazel}"
+                : ctfStage === 7
+                  ? "the tree is growing again"
+                  : "ctf start"
+    addLine("muted", `Next: ${next}`)
+  }
 
-    addLine("input", `$ ${trimmedCmd}`)
+  const executeCommand = async (value: string, recordHistory = true) => {
+    const trimmed = value.trim()
+    if (!trimmed || isBusy) return
+    const [rawCommand, ...args] = trimmed.split(/\s+/)
+    const command = rawCommand.toLowerCase()
+    addLine("input", `visitor@portfolio:~$ ${trimmed}`)
+    if (recordHistory) {
+      setHistory((previous) => [...previous, trimmed].slice(-50))
+      setHistoryIndex(-1)
+    }
 
     switch (command) {
-      case "help":
-        addLine("output", commands.help)
-        break
-
-      case "about":
-        addLine("output", "Navigating to About page...")
-        setTimeout(() => {
-          router.push("/about")
-          setIsOpen(false)
-        }, 500)
-        break
-
-      case "projects":
-        addLine("output", "Navigating to Projects page...")
-        setTimeout(() => {
-          router.push("/projects")
-          setIsOpen(false)
-        }, 500)
-        break
-
-      case "writeups":
-        addLine("output", "Navigating to Writeups page...")
-        setTimeout(() => {
-          router.push("/writeups")
-          setIsOpen(false)
-        }, 500)
-        break
-
-      case "contact":
-        addLine("output", "Navigating to Contact page...")
-        setTimeout(() => {
-          router.push("/contact")
-          setIsOpen(false)
-        }, 500)
-        break
-
-      case "email":
-        navigator.clipboard.writeText("siyam.exe@gmail.com")
-        addLine("output", "Email copied to clipboard: siyam.exe@gmail.com")
-        break
-
-
-
-      case "echo":
-        addLine("output", args.join(" ") || "")
-        break
-
-      case "startctf":
-        addLine("success", "[+] > Accessing goblin's archive...")
-        addLine("output", "...............................")
-        addLine("output", "[*] < Found encrypted scroll fragment >")
-        addLine("output", "[*] Note to self: Goblins love layers...")
-        addLine("output", "[*] like onions, or particularly complex codes")
-        addLine("output", "[*] Last seen: Lurking in writeups' depths")
-        addLine("output", "...............................")
-        addLine("output", "[?] What lies beneath the surface?")
-        break
-
-      case "decode":
-        const input = trimmedCmd.substring(7).trim()
-        if (!input) {
-          addLine("error", "Usage: decode <base64_string>")
-          addLine("output", "[*] Some strings may need multiple decoding attempts...")
-        } else {
-          try {
-            const decoded = atob(input.replace(/\s/g, ""))
-            // Check if the decoded result looks like base64
-            const base64Regex = /^[A-Za-z0-9+/=]+$/
-            if (base64Regex.test(decoded)) {
-              addLine("success", `[+] Decoded layer: ${decoded}`)
-              addLine("output", "[*] Hmm... this still looks encoded")
-            } else {
-              addLine("success", `[+] Decoded: ${decoded}`)
-            }
-          } catch (e) {
-            addLine("error", "[-] Invalid base64 string!")
-            shakeTerminal()
-          }
-        }
-        break
-
-      case "flag":
-        const flagInput = trimmedCmd.substring(5).trim()
-        if (!flagInput) {
-          addLine("error", "Usage: flag <code>")
-        } else {
-          // Submit the flag to any listeners (page may validate and emit ctf-success)
-          addLine("output", "[>] Submitting flag for verification...")
-          window.dispatchEvent(
-            new CustomEvent("ctf-submission", {
-              detail: { flagValue: flagInput },
-            }),
-          )
-
-          // Give immediate feedback; final validation and success handling is handled by page listener
-          addLine("output", "[>] Verification in progress (check console for hints)")
-        }
-        break
-
-      case "clear":
-        setLines([])
-        break
-
+      case "help": addLine("output", helpText); break
+      case "home": navigate("/", "Home"); break
+      case "about": navigate("/about", "About"); break
+      case "projects": navigate("/projects", "Projects"); break
+      case "writeups": navigate("/writeups", "Writeups"); break
+      case "contact": navigate("/contact", "Contact"); break
+      case "github": openExternal(siteLinks.github, "GitHub"); break
+      case "linkedin": openExternal(siteLinks.linkedin, "LinkedIn"); break
+      case "medium": openExternal(siteLinks.medium, "Medium"); break
+      case "email": await copyEmail(); break
       case "whoami":
-        addLine("output", commands.whoami)
+        addLine("output", `Alif Abedin Siyam // 1tsD@M0nk3\nSOC Analyst | Security Researcher | Aspiring Penetration Tester`)
         break
-
-      case "exit":
-        addLine("output", "Closing terminal...")
-        setTimeout(() => setIsOpen(false), 300)
+      case "status":
+        addLine("output", "SYSTEM STATUS\n  portfolio: online\n  documented project: 1\n  published writeups: 30\n  challenge: available")
         break
-
-      case "":
+      case "ls": addLine("output", "about/  projects/  writeups/  contact/  sunroot-grove.ctf"); break
+      case "pwd": addLine("output", "/home/visitor/portfolio"); break
+      case "date": addLine("output", new Date().toString()); break
+      case "echo": addLine("output", args.join(" ")); break
+      case "startctf":
+        await executeCommand("ctf start", false)
         break
-
-      default:
-        addLine("error", `Command not found: ${command}. Type "help" for available commands.`)
-    }
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (input.trim()) {
-      handleCommand(input)
-      setHistory((prev) => [...prev, input])
-      setHistoryIndex(-1)
-      setInput("")
-    }
-  }
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowUp") {
-      e.preventDefault()
-      if (history.length > 0) {
-        const newIndex = historyIndex === -1 ? history.length - 1 : Math.max(0, historyIndex - 1)
-        setHistoryIndex(newIndex)
-        setInput(history[newIndex])
-      }
-    } else if (e.key === "ArrowDown") {
-      e.preventDefault()
-      if (historyIndex !== -1) {
-        const newIndex = historyIndex + 1
-        if (newIndex >= history.length) {
-          setHistoryIndex(-1)
-          setInput("")
-        } else {
-          setHistoryIndex(newIndex)
-          setInput(history[newIndex])
+      case "ask":
+        if (args[0]?.toLowerCase() === "wizard") await postCtf("hint")
+        else addLine("error", '[-] Thistle only responds through the established command: ask wizard')
+        break
+      case "ctf": {
+        const action = args[0]?.toLowerCase()
+        if (!action) showCtfBriefing()
+        else if (action === "start") {
+          await postCtf("start")
         }
+        else if (action === "look" && args[1]?.toLowerCase() === "note") {
+          if (!ctfSession) addLine("error", "[-] No active journey. Run ctf start first.")
+          else await getCtf("note")
+        }
+        else if (action === "resume") {
+          if (!ctfSession) addLine("error", "[-] No active journey. Run ctf start first.")
+          else if (ctfStage === 2) navigate("/writeups/ecb-oracle#how-the-challenge-actually-works", "Grum's proof")
+          else if (ctfStage === 3) navigate("/projects", "Cindermaw's build record")
+          else if (ctfStage === 4) navigate("/robots.txt", "the route to Hollow's Reach")
+          else if (ctfStage === 5) navigate("/projects", "the smoke-darkened project record")
+          else showCtfBriefing()
+        }
+        else if (action === "status") showCtfBriefing()
+        else if (action === "accuse") {
+          const suspect = args.slice(1).join(" ")
+          if (!suspect) addLine("error", "[-] Usage: ctf accuse <name>")
+          else await postCtf("accuse", suspect)
+        }
+        else if (action === "submit") {
+          const answer = args.slice(1).join(" ")
+          if (!ctfSession) addLine("error", "[-] No active journey. Run ctf start first.")
+          else if (!answer) addLine("error", "[-] Usage: ctf submit <guardian-proof|DAMONKE{...}>")
+          else await postCtf("verify", answer)
+        }
+        else if (action === "reset") await resetCtf()
+        else addLine("error", `Unknown CTF action: ${action}. Type "ctf" for the case briefing.`)
+        break
       }
+      case "clear": setLines([]); break
+      case "exit": addLine("muted", "Closing control node..."); schedule(closeTerminal, 250); break
+      default: addLine("error", `Command not found: ${command}. Type "help" for the command index.`); shakeTerminal()
     }
   }
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault()
+    const command = input
+    setInput("")
+    void executeCommand(command)
+  }
+
+  const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "ArrowUp") {
+      event.preventDefault()
+      if (!history.length) return
+      const nextIndex = historyIndex === -1 ? history.length - 1 : Math.max(0, historyIndex - 1)
+      setHistoryIndex(nextIndex)
+      setInput(history[nextIndex])
+    } else if (event.key === "ArrowDown" && historyIndex !== -1) {
+      event.preventDefault()
+      const nextIndex = historyIndex + 1
+      setHistoryIndex(nextIndex >= history.length ? -1 : nextIndex)
+      setInput(nextIndex >= history.length ? "" : history[nextIndex])
+    }
+  }
+
+  const handleDialogKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key !== "Tab" || !dialogRef.current) return
+    const focusable = [...dialogRef.current.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], input:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+    if (!focusable.length) return
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault()
+      last.focus()
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault()
+      first.focus()
+    }
+  }
+
+  const progress = ctfStage === 7 ? 5 : Math.max(0, Math.min(5, ctfStage - 1))
 
   return (
     <>
-      {showConfetti && <Confetti />}
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm"
-              onClick={() => setIsOpen(false)}
-            />
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className={`terminal-container fixed inset-0 z-50 flex flex-col m-4 md:m-8 rounded-lg overflow-hidden`}
-              style={{
-                background: "rgba(0, 20, 20, 0.8)",
-                backdropFilter: "blur(10px)",
-                boxShadow: `0 0 30px rgba(0, 221, 136, 0.3), inset 0 1px 0 rgba(0, 221, 136, 0.3)`,
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Terminal Header */}
-              <div className="flex items-center justify-between px-4 py-3 bg-muted/40 border-b border-primary/30">
-                <div className="flex items-center gap-3">
-                  <div className="flex gap-1.5">
-                    <div className="w-3 h-3 rounded-full bg-destructive" />
-                    <div className="w-3 h-3 rounded-full bg-accent" />
-                    <div className="w-3 h-3 rounded-full bg-primary" />
-                  </div>
-                  <span className="text-sm text-primary font-bold">1tsD@M0nk3:~$</span>
+      {isOpen && (
+        <>
+          <div className="terminal-overlay-enter terminal-overlay" onClick={closeTerminal} aria-hidden="true" />
+          <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="terminal-title" tabIndex={-1} onKeyDown={handleDialogKeyDown} className="terminal-dialog-enter terminal-shell">
+            <header className="terminal-topbar">
+              <div className="terminal-window-controls" aria-hidden="true"><span /><span /><span /></div>
+              <div className="terminal-title-group">
+                <TerminalSquare aria-hidden="true" />
+                <div>
+                  <strong id="terminal-title">1tsD@M0nk3 Control Node</strong>
+                  <small>interactive portfolio terminal</small>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsOpen(false)}
-                  className="hover:bg-destructive/20 hover:text-destructive"
-                  aria-label="Close terminal"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
               </div>
+              <div className="terminal-topbar-status"><span aria-hidden="true" /> ONLINE</div>
+              <Button variant="ghost" size="sm" onClick={closeTerminal} aria-label="Close terminal"><X aria-hidden="true" /></Button>
+            </header>
 
-              {/* Terminal Output */}
-              <div
-                ref={outputRef}
-                className={`flex-1 overflow-y-auto p-4 space-y-1 font-mono text-sm scanlines transition-all duration-800 ${
-                  ctfPulsing ? "ctf-pulse" : ""
-                }`}
-              >
-                {lines.map((line, index) => (
+            <div className="terminal-workspace">
+              <aside className="terminal-sidebar">
+                <div className="terminal-sidebar-label">COMMAND MENU</div>
+                <nav aria-label="Terminal shortcuts" className="terminal-shortcuts">
+                  {shortcuts.map((item) => (
+                    <button key={item.command} type="button" onClick={() => void executeCommand(item.command)}>
+                      <item.icon aria-hidden="true" /><span>{item.label}</span><kbd>{item.command}</kbd>
+                    </button>
+                  ))}
+                  <button type="button" onClick={() => void executeCommand("help")}>
+                    <CircleHelp aria-hidden="true" /><span>Command index</span><kbd>help</kbd>
+                  </button>
+                </nav>
+
+                <div className={`terminal-ctf-card ${ctfStage === 7 ? "is-complete" : ""}`}>
+                  <div className="terminal-ctf-card-heading">
+                    <Radar aria-hidden="true" />
+                    <span>LIVE CTF</span>
+                    <i aria-hidden="true" />
+                  </div>
+                  <strong>THE LAST PEEL</strong>
+                  <p>Three guardians. One badly copied mark.</p>
                   <div
-                    key={index}
-                    className={`${
-                      line.type === "input"
-                        ? "text-foreground"
-                        : line.type === "error"
-                          ? "text-destructive"
-                          : line.type === "success"
-                            ? "text-primary neon-glow"
-                            : "text-muted-foreground"
-                    } whitespace-pre-wrap`}
+                    className="terminal-ctf-progress"
+                    aria-label={ctfStage === 7 ? "All 5 challenge chapters complete" : `Challenge chapter ${progress} of 5 active`}
                   >
-                    {line.content}
+                    {[1, 2, 3, 4, 5].map((stage) => <span key={stage} className={progress >= stage ? "is-active" : ""} />)}
                   </div>
-                ))}
-              </div>
-
-              {/* Terminal Input */}
-              <form onSubmit={handleSubmit} className="border-t border-primary/30 p-4 bg-muted/30">
-                <div className="flex items-center gap-2">
-                  <span className="text-primary font-bold">$</span>
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    className="flex-1 bg-transparent border-none outline-none text-foreground font-mono"
-                    placeholder="Type a command..."
-                    autoComplete="off"
-                  />
+                  <small>{ctfStage === 7 ? "CHALLENGE COMPLETE" : `${progress}/5 CHAPTERS · THISTLE HINTS AVAILABLE`}</small>
+                  <button type="button" onClick={() => void executeCommand(ctfSession ? "ctf resume" : "ctf start")}>
+                    <ShieldCheck aria-hidden="true" /> {ctfSession ? "Resume journey" : "Start journey"}
+                  </button>
                 </div>
-              </form>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-      <style>{`
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-10px); }
-          75% { transform: translateX(10px); }
-        }
-      `}</style>
+
+                <div className="terminal-sidebar-links">
+                  <button type="button" onClick={() => void executeCommand("github")}><Github aria-hidden="true" /> GitHub</button>
+                  <button type="button" onClick={() => void executeCommand("linkedin")}><Linkedin aria-hidden="true" /> LinkedIn</button>
+                  <button type="button" onClick={() => void executeCommand("email")}><Mail aria-hidden="true" /> Email</button>
+                </div>
+              </aside>
+
+              <section className="terminal-console">
+                <div className="terminal-boot-screen" role="img" aria-label="Animated ASCII torus and portfolio system information">
+                  <AsciiTorus />
+                  <div className="terminal-neofetch">
+                    <p><span>USER</span><strong>1tsD@M0nk3</strong></p>
+                    <p><span>ROLE</span><strong>security researcher</strong></p>
+                    <p><span>NODE</span><strong>portfolio.local</strong></p>
+                    <p><span>STACK</span><strong>Next.js / TypeScript</strong></p>
+                    <p><span>CTF</span><strong>{ctfStage === 7 ? "grove growing" : ctfSession ? `route active · ${progress}/5` : "peelrune scattered"}</strong></p>
+                    <small>ASCII TORUS · ZERO ASSET LOAD</small>
+                  </div>
+                </div>
+                <div className="terminal-console-meta">
+                  <span><i aria-hidden="true" /> SESSION ENCRYPTED</span>
+                  <span>~ shortcut · ↑↓ history · esc close</span>
+                </div>
+                <div ref={outputRef} role="log" aria-live="polite" className="terminal-output scanlines">
+                  {lines.map((line) => <div key={line.id} className={`terminal-line terminal-line-${line.type}`}>{line.content}</div>)}
+                  {isBusy && <div className="terminal-processing" role="status"><span /><span /><span /> processing</div>}
+                </div>
+
+                <div className="terminal-suggestions" aria-label="Suggested commands">
+                  {[
+                    ["help", "Command index"],
+                    ["whoami", "Profile"],
+                    ["status", "Status"],
+                    [ctfSession ? "ctf resume" : "ctf", "CTF challenge"],
+                  ].map(([command, label]) => <button key={command} type="button" onClick={() => void executeCommand(command)}>{label}<span>{command}</span></button>)}
+                </div>
+
+                <form onSubmit={handleSubmit} className="terminal-command-form">
+                  <label htmlFor="terminal-input" className="sr-only">Terminal command</label>
+                  <span aria-hidden="true">visitor@portfolio:~$</span>
+                  <input id="terminal-input" ref={inputRef} value={input} onChange={(event) => setInput(event.target.value)} onKeyDown={handleInputKeyDown} placeholder={isBusy ? "Processing command..." : "Type a command or choose from the menu"} autoComplete="off" spellCheck={false} disabled={isBusy} />
+                  <button type="submit" disabled={isBusy || !input.trim()}>RUN</button>
+                </form>
+              </section>
+            </div>
+          </div>
+        </>
+      )}
     </>
   )
 }

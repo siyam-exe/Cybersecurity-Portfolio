@@ -1,27 +1,40 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
 import Image from "next/image"
 
-export function CenteredIntro() {
+export function CenteredIntro({ headingId }: { headingId?: string }) {
   const [phase, setPhase] = useState<"name" | "alias">("name")
   const [displayedName, setDisplayedName] = useState("")
   const [displayedAlias, setDisplayedAlias] = useState("")
+  const [reduceMotion, setReduceMotion] = useState(false)
 
   const fullName = "Alif Abedin Siyam"
   const alias = "1tsD@M0nk3"
 
   useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
+    const updatePreference = () => setReduceMotion(mediaQuery.matches)
+    updatePreference()
+    mediaQuery.addEventListener("change", updatePreference)
+    return () => mediaQuery.removeEventListener("change", updatePreference)
+  }, [])
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setPhase("name")
+      setDisplayedName(fullName)
+      setDisplayedAlias("")
+      return
+    }
+
     if (phase === "name") {
-      // Type the name
       if (displayedName.length < fullName.length) {
         const timer = setTimeout(() => {
           setDisplayedName(fullName.slice(0, displayedName.length + 1))
-        }, 50) // Character delay
+        }, 50)
         return () => clearTimeout(timer)
       } else {
-        // After name is typed, wait 5 seconds then switch phase
         const timer = setTimeout(() => {
           setPhase("alias")
           setDisplayedName("")
@@ -29,14 +42,12 @@ export function CenteredIntro() {
         return () => clearTimeout(timer)
       }
     } else if (phase === "alias") {
-      // Type the alias
       if (displayedAlias.length < alias.length) {
         const timer = setTimeout(() => {
           setDisplayedAlias(alias.slice(0, displayedAlias.length + 1))
-        }, 50) // Character delay
+        }, 50)
         return () => clearTimeout(timer)
       } else {
-        // After alias is typed, wait a moment then loop back
         const timer = setTimeout(() => {
           setPhase("name")
           setDisplayedAlias("")
@@ -45,74 +56,51 @@ export function CenteredIntro() {
         return () => clearTimeout(timer)
       }
     }
-  }, [displayedName, displayedAlias, phase])
+  }, [displayedName, displayedAlias, phase, reduceMotion])
 
   return (
-    <div className="flex flex-col items-center justify-center gap-8">
-      {/* Avatar with soft glow */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6 }}
-        className="relative"
-      >
-        {/* Soft glow behind avatar */}
+    <div className="home-intro flex w-full flex-col items-center justify-center gap-5 md:gap-6">
+      <div className="avatar-enter relative">
         <div className="absolute inset-0 -m-8 bg-gradient-to-r from-primary/20 via-secondary/20 to-primary/20 blur-3xl rounded-full" />
 
-        {/* Avatar image */}
-        <div className="relative w-48 h-48 rounded-full overflow-hidden border-2 border-primary/50">
+        <div className="home-avatar relative h-48 w-48 overflow-hidden rounded-full border-2 border-primary/50 md:h-52 md:w-52">
           <Image
             src="/images/design-mode/cybersecurity-hacker-avatar.jpg"
             alt="Alif Abedin Siyam"
             fill
+            sizes="(min-width: 768px) 208px, 192px"
             className="object-cover"
             priority
           />
         </div>
-      </motion.div>
+      </div>
 
-      {/* Static Hello */}
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className="text-2xl text-foreground font-light"
-      >
+      <p className="section-enter text-xl font-light text-foreground md:text-2xl" style={{ animationDelay: "300ms" }}>
         Hello,
-      </motion.p>
+      </p>
 
-      {/* Animation loop container */}
-      <div className="min-h-32 flex flex-col items-center justify-center">
+      <div className="flex min-h-28 flex-col items-center justify-center md:min-h-32">
         {phase === "name" && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="text-center"
-          >
-            <p className="text-lg text-foreground/70 font-light">I'M,</p>
-            <p className="text-4xl font-bold text-primary neon-glow mt-2">
-              {displayedName}
-              {displayedName.length < fullName.length && <span className="animate-pulse">|</span>}
-            </p>
-          </motion.div>
+          <div className="fade-enter text-center">
+            <p className="text-lg text-foreground/70 font-light">I&apos;M,</p>
+            <h1 id={headingId} className="mt-2 text-4xl font-bold text-primary neon-glow md:text-5xl">
+              <span className="sr-only">{fullName}</span>
+              <span aria-hidden="true">
+                {displayedName}
+                {!reduceMotion && displayedName.length < fullName.length && <span className="animate-pulse">|</span>}
+              </span>
+            </h1>
+          </div>
         )}
 
         {phase === "alias" && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="text-center"
-          >
+          <div className="fade-enter text-center">
             <p className="text-lg text-foreground/70 font-light">Also known as,</p>
             <p className="text-4xl font-bold text-secondary mt-2">
               {displayedAlias}
-              {displayedAlias.length < alias.length && <span className="animate-pulse">|</span>}
+              {!reduceMotion && displayedAlias.length < alias.length && <span className="animate-pulse">|</span>}
             </p>
-          </motion.div>
+          </div>
         )}
       </div>
     </div>

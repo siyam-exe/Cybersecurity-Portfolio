@@ -1,114 +1,147 @@
-"use client"
-
-import { motion } from "framer-motion"
-import { TerminalBox } from "@/components/terminal-box"
+import {
+  ArrowUpRight,
+  BookOpenText,
+  BriefcaseBusiness,
+  Check,
+  Clock3,
+  Github,
+  Linkedin,
+  LockKeyhole,
+  MessageSquareText,
+  ShieldCheck,
+} from "lucide-react"
 import { ContactForm } from "@/components/contact-form"
-import { Github, Linkedin, Mail } from "lucide-react"
+import { EmailActions } from "@/components/email-actions"
+import { JsonLd } from "@/components/json-ld"
+import { TerminalBox } from "@/components/terminal-box"
+import { createPageMetadata, siteLinks } from "@/lib/site"
+import { pageSchema } from "@/lib/structured-data"
+
+const contactDescription =
+  "Contact Alif Abedin Siyam about cybersecurity roles, security research, technical projects, writeups, or professional collaboration."
+
+export const metadata = createPageMetadata({
+  title: "Contact Alif Abedin Siyam",
+  description: contactDescription,
+  path: "/contact",
+})
 
 const socialLinks = [
-  {
-    icon: Github,
-    href: "https://github.com/1tsD@M0nk3",
-    label: "GitHub",
-    username: "@1tsD@M0nk3",
-  },
-  {
-    icon: Linkedin,
-    href: "https://linkedin.com/in/alif-abedin-siyam",
-    label: "LinkedIn",
-    username: "Alif Abedin Siyam",
-  },
-  {
-    icon: Mail,
-    href: "mailto:siyam.exe@gmail.com",
-    label: "Email",
-    username: "siyam.exe@gmail.com",
-  },
+  { icon: Github, href: siteLinks.github, label: "GitHub", detail: "Projects & source code" },
+  { icon: Linkedin, href: siteLinks.linkedin, label: "LinkedIn", detail: "Professional profile" },
+  { icon: BookOpenText, href: siteLinks.medium, label: "Medium", detail: "Security writeups" },
+]
+
+const conversationTopics = [
+  "SOC and security operations roles",
+  "Junior penetration testing opportunities",
+  "Security research and technical collaboration",
+  "Questions about my projects or writeups",
 ]
 
 export default function ContactPage() {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 20 }}
-      transition={{ duration: 0.4 }}
-      className="container mx-auto px-4 py-20"
-    >
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-        <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4 neon-glow">
-          <span className="text-secondary">{">"}</span> Get in Touch
-        </h1>
-        <p className="text-muted-foreground mb-12">
-          Have a question or want to collaborate? Feel free to reach out through any of these channels.
-        </p>
+    <div className="contact-page page-enter">
+      <JsonLd
+        data={pageSchema({
+          type: "ContactPage",
+          name: "Contact Alif Abedin Siyam",
+          description: contactDescription,
+          path: "/contact",
+        })}
+      />
+      <div className="container mx-auto px-4 py-16 md:py-20">
+        <header className="contact-heading max-w-3xl">
+          <p className="contact-eyebrow">SECURE COMMUNICATION CHANNEL</p>
+          <h1>
+            <span aria-hidden="true">{">"}</span> Let&apos;s start a conversation<span className="text-primary">.</span>
+          </h1>
+          <p>
+            Whether you&apos;re hiring for a security role, want to discuss a project or writeup, or simply have a thoughtful question, my inbox is open.
+          </p>
+        </header>
 
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* Contact Form */}
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
-            <TerminalBox title="send_message.sh" className="h-full">
-              <div className="mb-4">
-                <p className="text-sm text-primary mb-2">
-                  <span className="text-secondary">{">"}</span> Send a message to Siyam.exe
-                </p>
+        <div className="contact-layout">
+          <div className="contact-sidebar section-enter" style={{ animationDelay: "120ms" }}>
+            <TerminalBox title="channel_status.log" className="contact-status-card overflow-hidden">
+              <div className="contact-status-line">
+                <span aria-hidden="true" />
+                <p>CHANNEL STATUS: OPEN</p>
               </div>
-              <ContactForm />
-            </TerminalBox>
-          </motion.div>
+              <h2>Good conversations start with context.</h2>
+              <p className="contact-status-copy">
+                A short introduction, the reason you&apos;re reaching out, and any useful links will help me give you a better reply.
+              </p>
 
-          {/* Social Links */}
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
-            <TerminalBox title="social_links.conf" className="h-full">
-              <div className="space-y-4">
-                <p className="text-sm text-muted-foreground mb-6">
-                  <span className="text-primary">{">"}</span> Connect with me on these platforms
-                </p>
-                {socialLinks.map((link, index) => (
-                  <motion.a
-                    key={link.label}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.4 + index * 0.1 }}
-                    className="flex items-center gap-4 p-4 rounded-lg bg-muted/30 border border-primary/20 hover:border-primary hover:bg-primary/10 transition-all group"
-                  >
-                    <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center group-hover:bg-primary/30 transition-colors">
-                      <link.icon className="h-5 w-5 text-primary" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-bold text-foreground group-hover:text-primary transition-colors">
-                        {link.label}
-                      </p>
-                      <p className="text-sm text-muted-foreground">{link.username}</p>
-                    </div>
-                  </motion.a>
+              <div className="contact-topic-list" aria-label="Good reasons to get in touch">
+                {conversationTopics.map((topic) => (
+                  <div key={topic}>
+                    <Check aria-hidden="true" />
+                    <span>{topic}</span>
+                  </div>
                 ))}
               </div>
-            </TerminalBox>
-          </motion.div>
-        </div>
 
-        {/* Additional Info */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-          className="mt-8"
-        >
-          <TerminalBox>
-            <div className="text-center text-sm text-muted-foreground">
-              <p>
-                <span className="text-primary">{">"}</span> Response time: Usually within 24-48 hours
-              </p>
-              <p className="mt-2">
-                <span className="text-primary">{">"}</span> For urgent matters, please reach out via email directly
-              </p>
+              <EmailActions address={siteLinks.emailAddress} href={siteLinks.email} />
+            </TerminalBox>
+
+            <div className="contact-social-grid" aria-label="Professional profiles">
+              {socialLinks.map((link, index) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-social-link section-enter"
+                  style={{ animationDelay: `${260 + index * 80}ms` }}
+                  aria-label={`${link.label}: ${link.detail}`}
+                >
+                  <link.icon aria-hidden="true" />
+                  <span>
+                    <strong>{link.label}</strong>
+                    <small>{link.detail}</small>
+                  </span>
+                  <ArrowUpRight aria-hidden="true" />
+                </a>
+              ))}
             </div>
-          </TerminalBox>
-        </motion.div>
-      </motion.div>
-    </motion.div>
+
+            <div className="contact-response-note section-enter" style={{ animationDelay: "520ms" }}>
+              <Clock3 aria-hidden="true" />
+              <div>
+                <p><span>{">"}</span> Response time: Usually within 24-48 hours</p>
+                <p><span>{">"}</span> For urgent matters, please reach out via email directly</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="section-enter" style={{ animationDelay: "220ms" }}>
+            <TerminalBox title="compose_message.sh" className="contact-form-card overflow-hidden">
+              <div className="contact-form-intro">
+                <div>
+                  <MessageSquareText aria-hidden="true" />
+                  <div>
+                    <p>NEW MESSAGE</p>
+                    <h2>Send me a message</h2>
+                  </div>
+                </div>
+                <span>All fields required</span>
+              </div>
+              <p className="contact-form-copy">Share enough detail for a useful response. Your message goes directly to my inbox.</p>
+
+              <div className="contact-delivery-flow" aria-label="Message protection process">
+                <span><ShieldCheck aria-hidden="true" /> Validate</span>
+                <i aria-hidden="true" />
+                <span><LockKeyhole aria-hidden="true" /> Verify</span>
+                <i aria-hidden="true" />
+                <span><BriefcaseBusiness aria-hidden="true" /> Deliver</span>
+              </div>
+
+              <ContactForm />
+            </TerminalBox>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
