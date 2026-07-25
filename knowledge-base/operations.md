@@ -47,13 +47,12 @@ The Last Peel of Sunroot Grove is a recreational five-chapter challenge, not an 
 
 EmailJS delivery, Turnstile rejection, the live Upstash-backed contact path, production security headers, the complete CTF solve, and CTF tamper rejection have been verified.
 
-Before release:
+Current follow-ups:
 
 1. Replace or temporarily remove the current public résumé.
-2. Review and merge draft PR #1 so `master` matches the audited source.
-3. Keep the successful local QA and Gitleaks evidence while GitHub's billing lock prevents hosted CI and CodeQL. Dependabot vulnerability alerts and security updates are enabled.
-4. Verify a genuinely expired production CTF session or use a controlled short-TTL staging test.
-5. Vercel Speed Insights is enabled and receiving production traffic; continue monitoring as the sample grows.
-6. Google Search Console ownership is verified and the sitemap is submitted. Recheck the initial `Couldn't fetch` processing state and retry priority indexing after the daily quota resets.
+2. Keep the successful local QA and Gitleaks evidence while GitHub's billing lock prevents hosted CI and CodeQL. Dependabot is enabled and reports zero open alerts on the merged default branch.
+3. Verify a genuinely expired production CTF session or use a controlled short-TTL staging test.
+4. Continue monitoring Vercel Speed Insights as the sample grows.
+5. Recheck Google Search Console's initial `Couldn't fetch` sitemap state and retry priority indexing after the daily quota resets.
 
 See `final-qa.md` for the complete evidence and limitations.

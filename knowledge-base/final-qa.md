@@ -4,14 +4,13 @@ Last audited: **2026-07-25**
 
 ## Release verdict
 
-The application code is locally release-ready: installation is reproducible, the dependency audit is clean, all static checks pass, the production build succeeds, and all 39 browser tests pass.
+The rebuilt application is merged and deployed to production. Installation is reproducible, the dependency audit is clean, all static checks pass, the production build succeeds, all 39 browser tests pass, and the production routes were rechecked against the merged commit.
 
-The repository is **not yet fully release-approved** for two reasons:
+One owner-content issue prevents an unconditional release approval:
 
 1. The currently public résumé conflicts with the approved privacy and credibility rules.
-2. The rebuilt source is pushed in draft PR #1 but has not been merged to `master`. GitHub-hosted CI, Gitleaks, and CodeQL jobs are blocked before execution by an account-level billing lock.
 
-Production EmailJS, Turnstile, Upstash, security headers, and the CTF's normal and tamper-rejection paths have been verified. The production checks that remain unconfirmed are recorded below rather than treated as complete.
+PR #1 was merged into `master` as `bae257d9b10b7f89ecbaa5172319c0a491eaee4e`, and Vercel successfully deployed that exact commit. Production EmailJS, Turnstile, Upstash, security headers, Google verification, crawl endpoints, and the CTF's normal and tamper-rejection paths have been verified. External checks that remain unavailable or pending are recorded below rather than treated as complete.
 
 ## Automated QA evidence
 
@@ -34,7 +33,7 @@ Production EmailJS, Turnstile, Upstash, security headers, and the CTF's normal a
 | HTTP hardening | **Passed in production** | CSP, HSTS, frame denial, referrer, permissions, and content-type protections present; framework signature header absent |
 | Crawl endpoints | **Passed in production** | `robots.txt` and the 36-URL sitemap respond correctly |
 
-The included CI workflow also repeats install, audit, type-check, lint, build, browser tests, and secret scanning. Draft PR #1 triggered all workflows, but GitHub refused to start their jobs because the account is locked for billing. No hosted step executed, so these red checks are infrastructure failures rather than test failures.
+The included CI workflow also repeats install, audit, type-check, lint, build, browser tests, and secret scanning. PR #1 and the merge commit triggered all workflows, but GitHub refused to start the CI, Gitleaks, and CodeQL jobs because the account is locked for billing. No hosted step executed, so these red checks are infrastructure failures rather than test failures. The matching local audit, type-check, lint, build, Playwright, and Gitleaks checks passed.
 
 ## Cleanup completed
 
@@ -71,16 +70,13 @@ Do not publish the next release with that PDF linked. Choose one of these action
 
 The résumé was reviewed only for release risk; it was not edited.
 
-### P1 — Merge the reviewed pull request
+### Release deployment — completed
 
-The complete rebuild is committed as `7d611cb` and pushed to `codex/final-portfolio-release` in draft PR #1. After owner approval:
+The complete rebuild was reviewed through PR #1 and merged into `master` as `bae257d9b10b7f89ecbaa5172319c0a491eaee4e`. Vercel reported a successful deployment for that commit, and the local checkout is synchronized with `origin/master`.
 
-1. Review and merge PR #1 into `master`.
-2. Confirm the resulting Vercel production deployment.
-3. Keep the complete local QA and Gitleaks evidence while the GitHub billing lock prevents hosted CI and CodeQL.
-4. Retry hosted workflows only if GitHub removes the account lock.
+Keep the complete local QA and Gitleaks evidence while the GitHub billing lock prevents hosted CI and CodeQL. Retry those hosted workflows only if GitHub removes the account lock; paying for Actions is not required for the site to remain deployed.
 
-Dependabot vulnerability alerts and security updates are enabled. Activation exposed 72 alerts on the obsolete `master` dependency tree: each alert belongs to the old `package-lock.json` or old `pnpm-lock.yaml`, primarily Next.js, Lodash, PostCSS, and Sharp. The release branch removes the second lockfile, updates the affected stack, and reports no known vulnerabilities through `pnpm audit`. Recheck Dependabot after merge so GitHub recalculates the default branch. The scheduled npm and GitHub Actions update configuration also becomes active after the PR reaches `master`.
+Dependabot vulnerability alerts and security updates are enabled. Before the merge, activation exposed 72 alerts on the obsolete default-branch lockfiles. After the rebuilt dependency tree reached `master`, GitHub recalculated the repository to **zero open Dependabot alerts**. The production tree also reports no known vulnerabilities through `pnpm audit`.
 
 ### P1 — Finish external production verification
 
@@ -107,7 +103,7 @@ Dependabot vulnerability alerts and security updates are enabled. Activation exp
 | Vercel Speed Insights dashboard ingestion | **Verified** | Enabled on Hobby and receiving production route/metric data |
 | GitHub hosted CI/Gitleaks/CodeQL | **Blocked externally** | PR jobs were created but GitHub did not start any steps because of an account billing lock |
 | Local Gitleaks | **Verified** | Full history scan passes after fingerprint-specific educational false-positive review |
-| Dependabot | **Enabled; default branch outdated** | 72 alerts belong to the old `master` lockfiles; the release branch audit is clean. Recheck after merge and scheduled updates activate then |
+| Dependabot | **Verified** | Alerts and security updates are enabled; GitHub recalculated the merged `master` dependency tree to zero open alerts |
 | Google Search Console ownership | **Verified** | Production verification meta is live and ownership auto-verified |
 | Google sitemap processing | **Submitted; recheck required** | Google currently reports `Couldn't fetch`; independent HTTP/XML/URL validation passes |
 | Manual indexing requests | **Quota blocked** | Search Console daily quota prevented the homepage request; retry priority URLs after reset |

@@ -4,7 +4,7 @@ This is the execution view of the complete audit. The numbered items refer to `p
 
 ## Current batch
 
-The overall/site-wide code batch, technical SEO/discoverability pass, and repository README are complete and locally verified as of 2026-07-25. See `overall-status.md` and `final-qa.md` for evidence and the release checklist. EmailJS, Turnstile, Upstash, production security headers, the full CTF path, and tamper rejection are verified. The public résumé, hosted GitHub checks, genuine CTF expiry, Speed Insights dashboard ingestion, and Google Search Console remain.
+The overall/site-wide code batch, technical SEO/discoverability pass, and repository README are complete, merged, deployed, and verified as of 2026-07-25. See `overall-status.md` and `final-qa.md` for evidence. EmailJS, Turnstile, Upstash, production security headers, the full CTF path, tamper rejection, Speed Insights ingestion, Search Console ownership, and zero-open-alert Dependabot state are verified. The public résumé, billing-blocked hosted GitHub checks, genuine CTF expiry, Google sitemap reprocessing, and post-quota indexing requests remain.
 
 ## 1. Overall general problems — shared by the website
 
@@ -122,7 +122,7 @@ Page work should use the shared fixes above instead of reimplementing them insid
 
 ## 3. SEO and discoverability
 
-**Status: Verified locally on 2026-07-25.** The technical foundation is complete; Search Console activation and real-world index monitoring remain deployment tasks.
+**Status: Verified locally and deployed on 2026-07-25.** The technical foundation is complete, Search Console ownership is verified, and real-world index monitoring remains.
 
 - **Semantic content:** 57–60, 64, 85. The real name, role, overview, documented project, credentials, and long-form writeups are server rendered and internally linked.
 - **Route metadata:** 61–73, 83–84. All six public routes and 30 writeup routes have unique titles/descriptions, production self-canonicals, shared `metadataBase`, complete Open Graph/Twitter cards, the branded `og.png`, site name, locale, and large-image preview directives.
@@ -130,7 +130,7 @@ Page work should use the shared fixes above instead of reimplementing them insid
 - **Crawl/index controls:** 78–82, 89–90. `robots.txt`, a 36-URL sitemap, manifest, branded 404, and proper dynamic-route 404s are present. Private APIs are excluded from the sitemap; the unfinished project is omitted from project schema.
 - **Internal/external discovery:** 86, 92–94. Homepage evidence links, global navigation, article breadcrumbs, related-writeup navigation, verified GitHub/LinkedIn/Medium links, and a real-name-first repository README with the live portfolio link are in place.
 - **Brand/search strategy:** 43–46, 87–88. Titles lead with or clearly include “Alif Abedin Siyam” and target-role context. A custom domain remains optional.
-- **Deployment follow-up:** Configure Google ownership verification, deploy, submit `/sitemap.xml`, request indexing for priority pages, and monitor Page Indexing and canonical reports. Rankings and crawl timing cannot be guaranteed by code.
+- **Deployment follow-up:** Ownership verification and sitemap submission are complete. Recheck Google's initial `Couldn't fetch` processing result, retry priority indexing after the daily quota resets, and monitor Page Indexing and canonical reports. Rankings and crawl timing cannot be guaranteed by code.
 
 ## 4. External artifacts and consistency
 
@@ -152,7 +152,7 @@ Items 239–258. Clean PDF metadata and ATS layout, remove weak/ambiguous claims
 6. **Contact:** validated form, privacy, abuse controls, and honest trust copy.
 7. **Terminal experience — complete:** focused command, layout, interaction, and presentation pass.
 8. **Secret CTF Easter egg — complete:** credible multi-step challenge, feedback, state, tests, and honest limitations.
-9. **SEO pass — complete in code:** crawl endpoints, metadata, structured data, social card, links, and regression assertions. Search Console activation remains after deployment.
+9. **SEO pass — complete and deployed:** crawl endpoints, metadata, structured data, social card, links, Google ownership verification, sitemap submission, and regression assertions. Sitemap reprocessing and post-quota indexing remain external follow-ups.
 10. **Performance/accessibility regression pass:** desktop, mobile, keyboard, screen reader, and reduced motion.
 11. **README complete; résumé pending:** repository documentation now describes only the implemented site. Replace or temporarily remove the public résumé before release.
 
