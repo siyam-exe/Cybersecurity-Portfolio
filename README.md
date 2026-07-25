@@ -1,8 +1,8 @@
-# Alif Abedin Siyam — Cybersecurity Portfolio
+# Cybersecurity Portfolio Website — Alif Abedin Siyam
 
 [![Live portfolio](https://img.shields.io/badge/live-alifabedinsiyam.vercel.app-00e69a?style=flat-square)](https://alifabedinsiyam.vercel.app)
 
-Portfolio of **Alif Abedin Siyam**, a SOC Analyst, Security Researcher, and aspiring Penetration Tester. The site presents verified project work, categorized security writeups, credentials, capabilities, and a server-authoritative terminal CTF while preserving its original binary-rain and terminal-inspired identity.
+Portfolio Website of **Alif Abedin Siyam**, a SOC Analyst, Security Researcher, and aspiring Penetration Tester. The site presents verified project work, categorized security writeups, credentials, capabilities, and a server-authoritative terminal CTF while preserving its original binary-rain and terminal-inspired identity.
 
 [Visit the portfolio](https://alifabedinsiyam.vercel.app) · [LinkedIn](https://www.linkedin.com/in/alif-abedin-siyam/) · [Medium](https://medium.com/@siyam.exe) · [GitHub](https://github.com/siyam-exe)
 
